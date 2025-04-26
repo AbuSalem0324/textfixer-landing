@@ -49,34 +49,31 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
         
         try {
-            // For demo purposes - in production, this would be a real API call
-            // Simulating API call delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // This is a placeholder - you'd actually call your API endpoint
-            /*
+            // Make a real API call to our backend
             const response = await fetch(`${API_URL}/subscribe`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email })
+                body: JSON.stringify({ 
+                    email: email,
+                    success_url: window.location.origin + '/success.html',
+                    cancel_url: window.location.origin + '/index.html'
+                })
             });
             
             const data = await response.json();
             
-            if (data.error) {
-                throw new Error(data.error);
+            if (!response.ok) {
+                throw new Error(data.error || 'Subscription request failed');
             }
             
             if (data.checkout_url) {
+                // Redirect to Stripe checkout
                 window.location.href = data.checkout_url;
+            } else {
+                throw new Error('No checkout URL returned');
             }
-            */
-            
-            // Demo version - redirect to a sample success page
-            // In production, this would redirect to Stripe
-            window.location.href = 'success-demo.html';
             
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
