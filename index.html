@@ -1,107 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TextFixer - AI-Powered Text Correction</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://js.stripe.com/v3/"></script>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>TextFixer</h1>
-            <p class="tagline">AI-Powered Text Correction in a Tap</p>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Fix Grammar, Clarity, and Typos Instantly</h2>
-                <p>TextFixer uses advanced AI to perfect your writing with a single tap. Available as an iOS Shortcut.</p>
-                <button class="cta-button" id="subscribe-button">Subscribe Now</button>
-            </div>
-            <div class="hero-image">
-                <div style="position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                    <iframe 
-                        src="https://www.canva.com/design/DAGlHTwcsbM/NXFdiA6ZWjulOGihm8eubQ/watch?utm_content=DAGlHTwcsbM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5d783a28f7"
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="features">
-        <div class="container">
-            <h2>How It Works</h2>
-            <div class="feature-grid">
-                <div class="feature">
-                    <div class="feature-icon">1</div>
-                    <h3>Select Text</h3>
-                    <p>Highlight any text in any app on your iPhone or iPad.</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">2</div>
-                    <h3>Run Shortcut</h3>
-                    <p>Tap "Share" and select the TextFixer shortcut.</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">3</div>
-                    <h3>Get Perfect Text</h3>
-                    <p>Your text is instantly fixed and replaced.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="pricing">
-        <div class="container">
-            <h2>Simple Pricing</h2>
-            <div class="price-card">
-                <h3>Monthly Subscription</h3>
-                <div class="price">£2.49<span>/month</span></div>
-                <ul class="benefits">
-                    <li>Unlimited text corrections</li>
-                    <li>Advanced grammar fixing</li>
-                    <li>Instant processing</li>
-                    <li>Works in any app</li>
-                    <li>Cancel anytime</li>
-                </ul>
-                <button class="cta-button" id="subscribe-monthly">Subscribe</button>
-            </div>
-        </div>
-    </section>
-
-    <div id="subscription-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Subscribe to TextFixer</h2>
-            <p>Enter your email to continue to payment:</p>
-            <form id="subscription-form">
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" required placeholder="your@email.com">
-                </div>
-                <button type="submit" class="cta-button">Continue to Payment</button>
-            </form>
-            <div id="form-error" class="error"></div>
-        </div>
-    </div>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 TextFixer. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="mailto:support@example.com">Contact</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
+    const modal = document.getElementById('subscription-modal');
+    const subscribeButton = document.getElementById('subscribe-button');
+    const subscribeMonthly = document.getElementById('subscribe-monthly');
+    const closeButton = document.querySelector('.close-button');
+    const subscriptionForm = document.getElementById('subscription-form');
+    const formError = document.getElementById('form-error');
+    
+    // Replace with your actual API URL
+    const API_URL = 'https://your-textfixer-api.render.com';
+    
+    // Open modal when subscribe button is clicked
+    subscribeButton.addEventListener('click', function() {
+        modal.style.display = 'block';
+    });
+    
+    subscribeMonthly.addEventListener('click', function() {
+        modal.style.display = 'block';
+    });
+    
+    // Close modal when close button is clicked
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // Handle form submission
+    subscriptionForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        
+        if (!email) {
+            formError.textContent = 'Please enter your email address';
+            return;
+        }
+        
+        // Show loading state
+        const submitButton = subscriptionForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.textContent = 'Processing...';
+        submitButton.disabled = true;
+        
+        try {
+            // Make a real API call to our backend
+            const response = await fetch(`${API_URL}/subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    email: email,
+                    success_url: window.location.origin + '/success.html',
+                    cancel_url: window.location.origin + '/index.html'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Subscription request failed');
+            }
+            
+            if (data.checkout_url) {
+                // Redirect to Stripe checkout
+                window.location.href = data.checkout_url;
+            } else {
+                throw new Error('No checkout URL returned');
+            }
+            
+        } catch (error) {
+            formError.textContent = error.message || 'An error occurred. Please try again.';
+            
+            // Reset button
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        }
+    });
+    
+    // Replace placeholder image with an actual screenshot if available
+    const heroImage = document.getElementById('hero-image');
+    if (heroImage) {
+        // Here you could dynamically load different images based on device
+        // For now, we'll just stick with the default
+    }
+});
