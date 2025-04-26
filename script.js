@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('subscription-modal');
     const subscribeButton = document.getElementById('subscribe-button');
     const subscribeMonthly = document.getElementById('subscribe-monthly');
-    const tryFreeButton = document.getElementById('try-free');
     const closeButton = document.querySelector('.close-button');
     const subscriptionForm = document.getElementById('subscription-form');
     const formError = document.getElementById('form-error');
@@ -11,28 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Replace with your actual API URL
     const API_URL = 'https://your-textfixer-api.render.com';
     
-    // Track which plan was selected
-    let selectedPlan = 'pro'; // Default to pro plan
-    
-    // Open modal when buttons are clicked
+    // Open modal when subscribe button is clicked
     subscribeButton.addEventListener('click', function() {
-        selectedPlan = 'pro';
-        document.querySelector('.modal-content h2').textContent = 'Get TextFixer Pro';
-        document.querySelector('.modal-content button[type="submit"]').textContent = 'Continue to Payment';
         modal.style.display = 'block';
     });
     
     subscribeMonthly.addEventListener('click', function() {
-        selectedPlan = 'pro';
-        document.querySelector('.modal-content h2').textContent = 'Get TextFixer Pro';
-        document.querySelector('.modal-content button[type="submit"]').textContent = 'Continue to Payment';
-        modal.style.display = 'block';
-    });
-    
-    tryFreeButton.addEventListener('click', function() {
-        selectedPlan = 'free';
-        document.querySelector('.modal-content h2').textContent = 'Get TextFixer Free';
-        document.querySelector('.modal-content button[type="submit"]').textContent = 'Create Free Account';
         modal.style.display = 'block';
     });
     
@@ -66,52 +49,30 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
         
         try {
-            if (selectedPlan === 'pro') {
-                // Pro plan - Stripe checkout
-                const response = await fetch(`${API_URL}/subscribe`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        email: email,
-                        success_url: window.location.origin + '/success.html',
-                        cancel_url: window.location.origin + '/index.html'
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Subscription request failed');
-                }
-                
-                if (data.checkout_url) {
-                    // Redirect to Stripe checkout
-                    window.location.href = data.checkout_url;
-                } else {
-                    throw new Error('No checkout URL returned');
-                }
+            // Make a real API call to our backend
+            const response = await fetch(`${API_URL}/subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    email: email,
+                    success_url: window.location.origin + '/success.html',
+                    cancel_url: window.location.origin + '/index.html'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Subscription request failed');
+            }
+            
+            if (data.checkout_url) {
+                // Redirect to Stripe checkout
+                window.location.href = data.checkout_url;
             } else {
-                // Free plan - direct registration
-                const response = await fetch(`${API_URL}/register-free`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        email: email
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Registration failed');
-                }
-                
-                // Redirect to free success page
-                window.location.href = window.location.origin + '/free-success.html';
+                throw new Error('No checkout URL returned');
             }
             
         } catch (error) {
@@ -127,5 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const heroImage = document.getElementById('hero-image');
     if (heroImage) {
         // Here you could dynamically load different images based on device
+        // For now, we'll just stick with the default
     }
 });
