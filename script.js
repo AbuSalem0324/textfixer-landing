@@ -69,103 +69,56 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             if (selectedPlan === 'pro') {
                 // Pro plan - Stripe checkout
-                console.log('Attempting pro subscription');
-                try {
-                    // Use the admin/create_user endpoint instead
-                    const response = await fetch(`${API_URL}/admin/create_user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            email: email
-                        })
-                    });
-                    
-                    // If the admin endpoint works, redirect to success
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('User created successfully:', data);
-                        window.location.href = new URL('/success.html', window.location.origin).href + 
-                            (data.api_key ? `?api_key=${data.api_key}` : '');
-                        return;
-                    }
-                    
+                console.log('Sending pro subscription request');
+                
+                // Use the admin/create_user endpoint since it's confirmed to be registered
+                const response = await fetch(`${API_URL}/admin/create_user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email
+                    })
+                });
+                
+                if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Admin endpoint error:', errorText);
-                } catch (adminError) {
-                    console.error('Admin endpoint error:', adminError);
+                    throw new Error('Failed to create user account');
                 }
                 
-                // If we get here, try the actual subscribe endpoint
-                console.log('Trying subscribe endpoint');
-                try {
-                    const response = await fetch(`${API_URL}/subscribe`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            email: email,
-                            success_url: new URL('/success.html', window.location.origin).href,
-                            cancel_url: new URL('/index.html', window.location.origin).href
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Subscribe endpoint error:', errorText);
-                        throw new Error('Subscription request failed');
-                    }
-                    
-                    const data = await response.json();
-                    
-                    if (data.checkout_url) {
-                        // Redirect to Stripe checkout
-                        window.location.href = data.checkout_url;
-                    } else {
-                        throw new Error('No checkout URL returned');
-                    }
-                } catch (subscribeError) {
-                    console.error('Subscribe endpoint error:', subscribeError);
-                    
-                    // If everything fails, just redirect to the demo page
-                    console.log('Falling back to demo page');
-                    window.location.href = new URL('/success-demo.html', window.location.origin).href;
-                }
+                const data = await response.json();
+                console.log('User created successfully:', data);
+                
+                // Redirect to success page with API key
+                window.location.href = new URL('/success.html', window.location.origin).href + 
+                    (data.api_key ? `?api_key=${data.api_key}` : '');
             } else {
-                // Free plan - use admin/create_user directly
-                console.log('Using admin/create_user for free registration');
+                // Free plan - use admin/create_user endpoint
+                console.log('Creating free account');
                 
-                try {
-                    const response = await fetch(`${API_URL}/admin/create_user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            email: email
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Admin endpoint error:', errorText);
-                        throw new Error('Registration failed');
-                    }
-                    
-                    const data = await response.json();
-                    console.log('User created successfully:', data);
-                    
-                    // Redirect to free success page
-                    window.location.href = new URL('/free-success.html', window.location.origin).href;
-                } catch (error) {
-                    console.error('Registration error:', error);
-                    // Since the logged error shows /register-free doesn't exist, 
-                    // just redirect to the success page for demonstration
-                    console.log('Redirecting to free-success.html anyway for demo purposes');
-                    window.location.href = new URL('/free-success.html', window.location.origin).href;
+                const response = await fetch(`${API_URL}/admin/create_user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Admin endpoint error:', errorText);
+                    throw new Error('Failed to create free account');
                 }
+                
+                const data = await response.json();
+                console.log('Free account created successfully:', data);
+                
+                // Redirect to free success page
+                window.location.href = new URL('/free-success.html', window.location.origin).href;
             }
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
