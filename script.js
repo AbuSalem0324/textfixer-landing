@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const subscriptionForm = document.getElementById('subscription-form');
     const formError = document.getElementById('form-error');
     
-    // Replace with your actual API URL
+    // API URL - Make sure this exactly matches your Render deployment URL
+    // Sometimes the URL might have additional path components or be slightly different
     const API_URL = 'https://textfixer.onrender.com';
     
     // Track which plan was selected
@@ -48,6 +49,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Check the health of the API to validate it's reachable
+    async function checkApiHealth() {
+        try {
+            console.log('Checking API health at:', `${API_URL}/health`);
+            const response = await fetch(`${API_URL}/health`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('API health check successful:', data);
+                return { status: true, data };
+            } else {
+                console.warn('API health check failed with status:', response.status);
+                return { status: false, error: `Status code: ${response.status}` };
+            }
+        } catch (error) {
+            console.error('API health check error:', error);
+            return { status: false, error: error.message };
+        }
+    }
+    
     // Handle form submission
     subscriptionForm.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -65,27 +91,47 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.textContent = 'Processing...';
         submitButton.disabled = true;
         
+        // First check if API is reachable
+        const healthCheck = await checkApiHealth();
+        formError.textContent = '';
+        
+        if (!healthCheck.status) {
+            formError.textContent = 'Cannot connect to the service. Please try again later.';
+            console.error('API health check failed before submission:', healthCheck.error);
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+            return;
+        }
+        
         try {
             if (selectedPlan === 'pro') {
                 // Pro plan - Stripe checkout
+                console.log('Sending request to:', `${API_URL}/subscribe`);
                 const response = await fetch(`${API_URL}/subscribe`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({ 
                         email: email,
-                        // Fix the success and cancel URLs to use the correct path construction
                         success_url: new URL('/success.html', window.location.origin).href,
                         cancel_url: new URL('/index.html', window.location.origin).href
                     })
                 });
                 
-                const data = await response.json();
-                
                 if (!response.ok) {
-                    throw new Error(data.error || 'Subscription request failed');
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        throw new Error(errorJson.error || 'Subscription request failed');
+                    } catch (jsonError) {
+                        throw new Error(`Subscription request failed (${response.status})`);
+                    }
                 }
+                
+                const data = await response.json();
                 
                 if (data.checkout_url) {
                     // Redirect to Stripe checkout
@@ -95,29 +141,76 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 // Free plan - direct registration
-                const response = await fetch(`${API_URL}/register-free`, {
+                console.log('Sending request to:', `${API_URL}/register-free`);
+                
+                // Check if the /register-free endpoint exists or if we should use /admin/create_user
+                // Some deployments might use the admin endpoint instead
+                let endpoint = '/register-free';
+                
+                const response = await fetch(`${API_URL}${endpoint}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        email: email
+                        email: email,
+                        send_email: true
                     })
                 });
                 
-                const data = await response.json();
-                
                 if (!response.ok) {
-                    throw new Error(data.error || 'Registration failed');
+                    if (response.status === 404 && endpoint === '/register-free') {
+                        // If register-free is not found, try the admin endpoint
+                        console.log('Falling back to admin endpoint');
+                        endpoint = '/admin/create_user';
+                        
+                        const adminResponse = await fetch(`${API_URL}${endpoint}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ 
+                                email: email,
+                                send_email: true
+                            })
+                        });
+                        
+                        if (!adminResponse.ok) {
+                            const errorText = await adminResponse.text();
+                            console.error('Admin endpoint error response:', errorText);
+                            throw new Error(`Registration failed (${adminResponse.status})`);
+                        }
+                        
+                        const adminData = await adminResponse.json();
+                        console.log('Registration successful via admin endpoint:', adminData);
+                        
+                        // Redirect to free success page
+                        window.location.href = new URL('/free-success.html', window.location.origin).href;
+                        return;
+                    }
+                    
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        throw new Error(errorJson.error || 'Registration failed');
+                    } catch (jsonError) {
+                        throw new Error(`Registration failed (${response.status})`);
+                    }
                 }
                 
-                // Redirect to free success page with correct path construction
+                const data = await response.json();
+                console.log('Registration successful:', data);
+                
+                // Redirect to free success page
                 window.location.href = new URL('/free-success.html', window.location.origin).href;
             }
             
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
-            console.error('Error:', error);
+            console.error('Form submission error:', error);
             
             // Reset button
             submitButton.textContent = originalButtonText;
@@ -125,6 +218,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Remove the hero image reference as it doesn't exist in the HTML structure
-    // The hero image in index.html is using an iframe, not an img element
+    // Check API health when the page loads
+    (async function() {
+        const health = await checkApiHealth();
+        if (!health.status) {
+            console.warn('API might not be available. Features requiring API calls may not work correctly.');
+        }
+    })();
 });
