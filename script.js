@@ -14,11 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Track which plan was selected
     let selectedPlan = 'pro'; // Default to pro plan
     
-    // For GitHub Pages, we need to ensure we're using the correct repository path
-    // This should be set to the repository name if your site is at username.github.io/repository-name
-    // Or empty string if your site is at username.github.io directly
-    const REPO_PATH = '/textfixer-landing';
-    
     // Open modal when buttons are clicked
     subscribeButton.addEventListener('click', function() {
         selectedPlan = 'pro';
@@ -96,12 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('User created successfully:', data);
                 
-                // Use hardcoded path for GitHub Pages
-                const successPath = `${REPO_PATH}/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
-                console.log('Redirecting to:', successPath);
+                // For GitHub Pages at root
+                console.log('Redirecting to success.html');
                 
                 // Redirect to success page with API key
-                window.location.href = successPath;
+                window.location.href = `/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
             } else {
                 // Free plan - use admin/create_user endpoint
                 console.log('Creating free account');
@@ -125,12 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('Free account created successfully:', data);
                 
-                // Use hardcoded path for GitHub Pages
-                const freePath = `${REPO_PATH}/free-success.html`;
-                console.log('Redirecting to:', freePath);
+                // For GitHub Pages at root
+                console.log('Redirecting to free-success.html');
                 
                 // Redirect to free success page
-                window.location.href = freePath;
+                window.location.href = '/free-success.html';
             }
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
