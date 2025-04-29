@@ -75,8 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: JSON.stringify({ 
                         email: email,
-                        success_url: window.location.origin + '/success.html',
-                        cancel_url: window.location.origin + '/index.html'
+                        // Fix the success and cancel URLs to use the correct path construction
+                        success_url: new URL('/success.html', window.location.origin).href,
+                        cancel_url: new URL('/index.html', window.location.origin).href
                     })
                 });
                 
@@ -110,12 +111,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(data.error || 'Registration failed');
                 }
                 
-                // Redirect to free success page
-                window.location.href = window.location.origin + '/free-success.html';
+                // Redirect to free success page with correct path construction
+                window.location.href = new URL('/free-success.html', window.location.origin).href;
             }
             
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
+            console.error('Error:', error);
             
             // Reset button
             submitButton.textContent = originalButtonText;
@@ -123,9 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Replace placeholder image with an actual screenshot if available
-    const heroImage = document.getElementById('hero-image');
-    if (heroImage) {
-        // Here you could dynamically load different images based on device
-    }
+    // Remove the hero image reference as it doesn't exist in the HTML structure
+    // The hero image in index.html is using an iframe, not an img element
 });
