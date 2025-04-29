@@ -129,3 +129,36 @@ document.addEventListener('DOMContentLoaded', function() {
         // Here you could dynamically load different images based on device
     }
 });
+// Free plan registration
+try {
+    // Free plan - direct registration
+    const response = await fetch(`${API_URL}/register-free`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            email: email
+        })
+    });
+    
+    // Log the response for debugging
+    console.log("Register free response:", response.status);
+    
+    const data = await response.json();
+    console.log("Register free data:", data);
+    
+    if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+    }
+    
+    // Redirect to free success page
+    window.location.href = window.location.origin + '/free-success.html';
+} catch (error) {
+    console.error("Free registration error:", error);
+    formError.textContent = error.message || 'An error occurred. Please try again.';
+    
+    // Reset button
+    submitButton.textContent = originalButtonText;
+    submitButton.disabled = false;
+}
