@@ -48,6 +48,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Function to get the base path for the site
+    function getBasePath() {
+        // Get the current path up to the last directory
+        const path = window.location.pathname;
+        const lastSlashIndex = path.lastIndexOf('/');
+        
+        // If we're at root, return empty string, otherwise return the directory path
+        if (lastSlashIndex <= 0) {
+            return '';
+        }
+        
+        return path.substring(0, lastSlashIndex);
+    }
+    
     // Handle form submission
     subscriptionForm.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -91,9 +105,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('User created successfully:', data);
                 
+                // Use the correct path for success.html
+                const basePath = getBasePath();
+                const successPath = `${basePath}/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
+                console.log('Redirecting to:', successPath);
+                
                 // Redirect to success page with API key
-                window.location.href = new URL('/success.html', window.location.origin).href + 
-                    (data.api_key ? `?api_key=${data.api_key}` : '');
+                window.location.href = successPath;
             } else {
                 // Free plan - use admin/create_user endpoint
                 console.log('Creating free account');
@@ -117,8 +135,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('Free account created successfully:', data);
                 
+                // Use the correct path for free-success.html
+                const basePath = getBasePath();
+                const freePath = `${basePath}/free-success.html`;
+                console.log('Redirecting to:', freePath);
+                
                 // Redirect to free success page
-                window.location.href = new URL('/free-success.html', window.location.origin).href;
+                window.location.href = freePath;
             }
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
