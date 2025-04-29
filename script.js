@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formError = document.getElementById('form-error');
     
     // Replace with your actual API URL
-    const API_URL = 'https://your-textfixer-api.render.com';
+    const API_URL = 'https://textfixer.onrender.com';
     
     // Open modal when subscribe button is clicked
     subscribeButton.addEventListener('click', function() {
