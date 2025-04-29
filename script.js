@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Track which plan was selected
     let selectedPlan = 'pro'; // Default to pro plan
     
+    // For GitHub Pages, we need to ensure we're using the correct repository path
+    // This should be set to the repository name if your site is at username.github.io/repository-name
+    // Or empty string if your site is at username.github.io directly
+    const REPO_PATH = '/textfixer-landing';
+    
     // Open modal when buttons are clicked
     subscribeButton.addEventListener('click', function() {
         selectedPlan = 'pro';
@@ -47,20 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     });
-    
-    // Function to get the base path for the site
-    function getBasePath() {
-        // Get the current path up to the last directory
-        const path = window.location.pathname;
-        const lastSlashIndex = path.lastIndexOf('/');
-        
-        // If we're at root, return empty string, otherwise return the directory path
-        if (lastSlashIndex <= 0) {
-            return '';
-        }
-        
-        return path.substring(0, lastSlashIndex);
-    }
     
     // Handle form submission
     subscriptionForm.addEventListener('submit', async function(event) {
@@ -105,9 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('User created successfully:', data);
                 
-                // Use the correct path for success.html
-                const basePath = getBasePath();
-                const successPath = `${basePath}/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
+                // Use hardcoded path for GitHub Pages
+                const successPath = `${REPO_PATH}/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
                 console.log('Redirecting to:', successPath);
                 
                 // Redirect to success page with API key
@@ -135,9 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('Free account created successfully:', data);
                 
-                // Use the correct path for free-success.html
-                const basePath = getBasePath();
-                const freePath = `${basePath}/free-success.html`;
+                // Use hardcoded path for GitHub Pages
+                const freePath = `${REPO_PATH}/free-success.html`;
                 console.log('Redirecting to:', freePath);
                 
                 // Redirect to free success page
