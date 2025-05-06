@@ -48,6 +48,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Function to construct correct URL paths
+    function constructPath(pageName) {
+        // Get current URL without filename and query parameters
+        const currentUrl = window.location.href;
+        const urlObj = new URL(currentUrl);
+        const baseUrl = urlObj.origin; // Just the domain part
+        
+        // Get the pathname without the file at the end
+        let pathname = urlObj.pathname;
+        const lastSlash = pathname.lastIndexOf('/');
+        if (lastSlash >= 0) {
+            pathname = pathname.substring(0, lastSlash + 1);
+        } else {
+            pathname = '/';
+        }
+        
+        // Combine parts
+        return baseUrl + pathname + pageName;
+    }
+    
     // Handle form submission
     subscriptionForm.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -78,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        email: email
+                        email: email,
+                        send_email: true
                     })
                 });
                 
@@ -91,11 +112,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('User created successfully:', data);
                 
-                // For GitHub Pages at root
-                console.log('Redirecting to success.html');
+                // Construct proper path to success.html
+                const successUrl = constructPath('success.html');
+                const fullSuccessUrl = data.api_key ? `${successUrl}?api_key=${data.api_key}` : successUrl;
+                console.log('Redirecting to:', fullSuccessUrl);
                 
                 // Redirect to success page with API key
-                window.location.href = `/success.html${data.api_key ? `?api_key=${data.api_key}` : ''}`;
+                window.location.href = fullSuccessUrl;
             } else {
                 // Free plan - use admin/create_user endpoint
                 console.log('Creating free account');
@@ -106,7 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        email: email
+                        email: email,
+                        send_email: true
                     })
                 });
                 
@@ -119,11 +143,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('Free account created successfully:', data);
                 
-                // For GitHub Pages at root
-                console.log('Redirecting to free-success.html');
+                // Construct proper path to free-success.html
+                const freeSuccessUrl = constructPath('free-success.html');
+                console.log('Redirecting to:', freeSuccessUrl);
                 
                 // Redirect to free success page
-                window.location.href = '/free-success.html';
+                window.location.href = freeSuccessUrl;
             }
         } catch (error) {
             formError.textContent = error.message || 'An error occurred. Please try again.';
