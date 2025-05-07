@@ -135,10 +135,34 @@ export class UIController {
         this.setLoadingState(true);
         
         try {
-            // Create user account via API
-            const data = await this.apiService.createUserAccount(email);
+            // Determine subscription type based on selected plan
+            const subscriptionType = this.state.selectedPlan === this.plans.PRO ? "pro" : "free";
+            console.log(`Creating user account with subscription type: ${subscriptionType}`);
             
-            // Redirect to appropriate success page based on plan
+            // Create user account via API with the correct subscription type
+            const data = await this.apiService.createUserAccount(email, subscriptionType);
+            
+            if (this.state.selectedPlan === this.plans.PRO) {
+                // For PRO plans, create a checkout session and redirect to Stripe
+                try {
+                    const checkoutData = await this.apiService.createCheckoutSession(
+                        email,
+                        window.location.origin + '/' + Config.PAGES.PRO_SUCCESS,
+                        window.location.origin + '/' + Config.PAGES.CANCEL
+                    );
+                    
+                    // Redirect to Stripe checkout
+                    window.location.href = checkoutData.checkout_url;
+                    return;
+                } catch (checkoutError) {
+                    console.error('Checkout error:', checkoutError);
+                    this.showError('Failed to create checkout session. Please try again.');
+                    this.setLoadingState(false, originalButtonText);
+                    return;
+                }
+            }
+            
+            // For FREE plans, redirect to success page
             this.handleSuccessfulRegistration(data);
         } catch (error) {
             this.showError(error.message || 'An error occurred. Please try again.');
@@ -157,7 +181,7 @@ export class UIController {
         
         // Prepare URL parameters
         const params = {};
-        if (isPro && data.api_key) {
+        if (data.api_key) {
             params.api_key = data.api_key;
         }
         

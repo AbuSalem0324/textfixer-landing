@@ -14,11 +14,12 @@ export class APIService {
     /**
      * Create a user account via API
      * @param {string} email - User's email address
+     * @param {string} subscriptionType - Subscription type ("free" or "pro")
      * @param {boolean} sendEmail - Whether to send welcome email
      * @returns {Promise<Object>} - API response data
      * @throws {Error} - If API call fails
      */
-    async createUserAccount(email, sendEmail = true) {
+    async createUserAccount(email, subscriptionType = "free", sendEmail = true) {
         try {
             const response = await fetch(`${this.baseUrl}/admin/create_user`, {
                 method: 'POST',
@@ -27,6 +28,7 @@ export class APIService {
                 },
                 body: JSON.stringify({ 
                     email: email,
+                    subscription_type: subscriptionType,
                     send_email: sendEmail
                 })
             });
