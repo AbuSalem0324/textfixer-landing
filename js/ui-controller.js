@@ -117,6 +117,17 @@ export class UIController {
     }
     
     /**
+     * Get the full absolute URL for a page name
+     * @param {string} pageName - Page name (e.g., "success.html")
+     * @returns {string} - Full URL
+     */
+    getFullPageUrl(pageName) {
+        // Get base URL from the current page
+        const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+        return `${baseUrl}/${pageName}`;
+    }
+    
+    /**
      * Handle form submission
      * @param {Event} event - Form submission event
      */
@@ -145,10 +156,16 @@ export class UIController {
             if (this.state.selectedPlan === this.plans.PRO) {
                 // For PRO plans, create a checkout session and redirect to Stripe
                 try {
+                    // Construct full URLs for success and cancel pages
+                    const successUrl = this.getFullPageUrl(Config.PAGES.PRO_SUCCESS);
+                    const cancelUrl = this.getFullPageUrl(Config.PAGES.CANCEL || 'index.html');
+                    
+                    console.log('Redirecting to checkout with success URL:', successUrl);
+                    
                     const checkoutData = await this.apiService.createCheckoutSession(
                         email,
-                        window.location.origin + '/' + Config.PAGES.PRO_SUCCESS,
-                        window.location.origin + '/' + Config.PAGES.CANCEL
+                        successUrl,
+                        cancelUrl
                     );
                     
                     // Redirect to Stripe checkout
