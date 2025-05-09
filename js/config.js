@@ -7,7 +7,7 @@ export const Config = {
     /**
      * API URL - Make sure this exactly matches your deployed backend
      */
-    API_URL: 'https://textfixer.onrender.com',
+    API_URL: 'https://textfixer.onrender.com', // Keep this as is or update if your backend URL changes
     
     /**
      * Available subscription plans
