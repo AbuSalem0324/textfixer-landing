@@ -4,100 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscription Successful - TextFixer</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-new.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .success-container {
-            text-align: center;
-            padding: 4rem 0;
             max-width: 800px;
             margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+        
+        .success-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
         }
         
         .success-icon {
-            font-size: 5rem;
-            color: #4caf50;
-            margin-bottom: 2rem;
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-success);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            font-size: 2.5rem;
         }
         
         .api-key-container {
-            background-color: #f5f5f7;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border: 1px solid #ddd;
+            background-color: var(--color-tertiary);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
         }
         
         .api-key {
+            background-color: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
             font-family: monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            margin: var(--spacing-md) 0;
             word-break: break-all;
-            padding: 0.5rem;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid var(--color-secondary);
         }
         
         .instructions {
-            text-align: left;
-            margin: 2rem 0;
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .instructions h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-accent);
         }
         
         .instructions ol {
-            padding-left: 1.5rem;
+            margin-left: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
         }
         
         .instructions li {
-            margin-bottom: 1rem;
+            margin-bottom: var(--spacing-md);
         }
         
-        .download-button {
-            margin-top: 1rem;
+        .button-container {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .support-note {
+            text-align: center;
+            margin: var(--spacing-xl) 0;
         }
     </style>
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <div class="container">
-            <h1>TextFixer</h1>
-            <p class="tagline">AI-Powered Text Correction in a Tap</p>
+            <div class="logo">
+                <h1>TextFixer</h1>
+                <p class="tagline">AI-Powered Text Correction</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="blog.html">Updates</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <div class="success-container container">
-        <div class="success-icon">✓</div>
-        <h1>Subscription Successful!</h1>
-        <p>Thank you for subscribing to TextFixer. Your account has been activated.</p>
+    <section class="page-header">
+        <div class="container">
+            <h2>Subscription Successful</h2>
+            <p>Your TextFixer Pro subscription has been activated</p>
+        </div>
+    </section>
+
+    <div class="success-container">
+        <div class="success-header">
+            <div class="success-icon">✓</div>
+            <h2>Thank You for Subscribing to TextFixer Pro!</h2>
+            <p>Your account has been successfully activated with unlimited access to TextFixer's advanced features.</p>
+        </div>
         
         <div class="api-key-container">
-            <h2>Your API Key</h2>
-            <p>You'll need this to set up the TextFixer shortcut:</p>
+            <h3>Your API Key</h3>
+            <p>You'll need this API key to set up TextFixer on your devices:</p>
             <div class="api-key" id="api-key">Loading your API key...</div>
-            <button class="cta-button" id="copy-key">Copy API Key</button>
+            <div class="button-container">
+                <button class="btn btn-primary" id="copy-key">Copy API Key</button>
+            </div>
         </div>
         
         <div class="instructions">
-            <h2>Next Steps:</h2>
+            <h3>Next Steps</h3>
             <ol>
-                <li>Download the TextFixer iOS Shortcut by clicking the button below.</li>
+                <li>Download the TextFixer iOS Shortcut using the button below.</li>
                 <li>When prompted during setup, paste your API key from above.</li>
                 <li>Once set up, select any text in any app, tap the share button, and choose TextFixer from the shortcuts menu.</li>
-                <li>Your text will be corrected automatically!</li>
+                <li>Your text will be instantly corrected with professional-grade improvements!</li>
             </ol>
-            <button class="cta-button download-button" id="download-shortcut">Download iOS Shortcut</button>
+            <div class="button-container">
+                <button class="btn btn-primary" id="download-shortcut">Download iOS Shortcut</button>
+                <a href="downloads.html" class="btn btn-secondary">View Setup Instructions</a>
+            </div>
         </div>
         
-        <p>If you have any questions, please contact our support team at <a href="mailto:support@example.com">support@example.com</a>.</p>
-        
-        <a href="index.html" class="cta-button">Back to Home</a>
+        <div class="support-note">
+            <p>If you have any questions, please contact our support team at <a href="mailto:support@textfixer.com">support@textfixer.com</a></p>
+            <a href="index.html" class="btn btn-text">Return to Home</a>
+        </div>
     </div>
 
-    <footer>
+    <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2025 TextFixer. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="mailto:support@example.com">Contact</a>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h2>TextFixer</h2>
+                    <p>AI-powered text correction in a tap.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="index.html#features">Features</a></li>
+                            <li><a href="index.html#pricing">Pricing</a></li>
+                            <li><a href="downloads.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Updates</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TextFixer. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -124,11 +216,10 @@
                 });
             });
             
-            // Download shortcut (placeholder)
+            // Download shortcut
             document.getElementById('download-shortcut').addEventListener('click', function() {
-                alert('In production, this would download or open the TextFixer iOS shortcut.\n\nFor now, this is just a demo.');
+                // In production, this would download or open the iOS shortcut
+                window.location.href = 'https://www.icloud.com/shortcuts/your-shortcut-id';
             });
         });
     </script>
-</body>
-</html>

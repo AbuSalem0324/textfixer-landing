@@ -4,85 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo Success - TextFixer</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-new.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        .demo-container {
-            text-align: center;
-            padding: 4rem 0;
+        .success-container {
             max-width: 800px;
             margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+        
+        .success-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
         }
         
         .success-icon {
-            font-size: 5rem;
-            color: #4caf50;
-            margin-bottom: 2rem;
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-success);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            font-size: 2.5rem;
         }
         
         .demo-note {
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
-            padding: 1rem;
-            border-radius: 4px;
-            margin: 2rem 0;
+            background-color: var(--color-warning);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .demo-note h3 {
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
         }
         
         .api-key-container {
-            background-color: #f5f5f7;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border: 1px solid #ddd;
+            background-color: var(--color-tertiary);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
         }
         
         .api-key {
+            background-color: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
             font-family: monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            margin: var(--spacing-md) 0;
             word-break: break-all;
-            padding: 0.5rem;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid var(--color-secondary);
+        }
+        
+        .button-container {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .next-steps {
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .support-note {
+            text-align: center;
+            margin: var(--spacing-xl) 0;
         }
     </style>
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <div class="container">
-            <h1>TextFixer</h1>
-            <p class="tagline">AI-Powered Text Correction in a Tap</p>
+            <div class="logo">
+                <h1>TextFixer</h1>
+                <p class="tagline">AI-Powered Text Correction</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="blog.html">Updates</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <div class="demo-container container">
-        <div class="success-icon">✓</div>
-        <h1>Demo Success Page</h1>
-        <p>This is a demonstration of what the success page would look like after subscribing.</p>
+    <section class="page-header">
+        <div class="container">
+            <h2>Demo Success</h2>
+            <p>Preview of the subscription success page</p>
+        </div>
+    </section>
+
+    <div class="success-container">
+        <div class="success-header">
+            <div class="success-icon">✓</div>
+            <h2>Demo Success Page</h2>
+            <p>This is a demonstration of what the success page would look like after subscribing to TextFixer Pro.</p>
+        </div>
         
         <div class="demo-note">
-            <strong>Demo Note:</strong> In production, this page would be shown after a successful Stripe payment. The API key would be generated by your backend server.
+            <h3>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 17C11.45 17 11 16.55 11 16V12C11 11.45 11.45 11 12 11C12.55 11 13 11.45 13 12V16C13 16.55 12.55 17 12 17ZM13 9H11V7H13V9Z" fill="#4A3933"/>
+                </svg>
+                Demo Note
+            </h3>
+            <p>In production, this page would be shown after a successful Stripe payment. The API key would be generated by your backend server and displayed to the user.</p>
+            <p>All functionality on this page is simulated for demonstration purposes.</p>
         </div>
         
         <div class="api-key-container">
-            <h2>Your Demo API Key</h2>
+            <h3>Your Demo API Key</h3>
             <p>This is what an API key would look like:</p>
             <div class="api-key">DEMO_ab12cd34ef56gh78ij90kl12mn34op56qr78st90</div>
-            <button class="cta-button" onclick="alert('In production, this would copy the API key to your clipboard.')">Copy API Key</button>
+            <div class="button-container">
+                <button class="btn btn-primary" onclick="alert('In production, this would copy the API key to your clipboard.')">Copy API Key</button>
+            </div>
         </div>
         
-        <p>The real success page would include instructions for downloading and setting up the iOS Shortcut.</p>
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <p>In the real subscription flow, after receiving your API key:</p>
+            <ol>
+                <li>You would download the TextFixer iOS Shortcut</li>
+                <li>When setting up the shortcut, you would enter your API key</li>
+                <li>Once set up, you can use TextFixer in any app with the share menu</li>
+            </ol>
+            <p>The real success page would include instructions and a download button for the iOS Shortcut.</p>
+        </div>
         
-        <a href="index.html" class="cta-button">Back to Home</a>
+        <div class="support-note">
+            <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
     </div>
 
-    <footer>
+    <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2025 TextFixer. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="mailto:support@example.com">Contact</a>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h2>TextFixer</h2>
+                    <p>AI-powered text correction in a tap.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="index.html#features">Features</a></li>
+                            <li><a href="index.html#pricing">Pricing</a></li>
+                            <li><a href="downloads.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Updates</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TextFixer. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
             </div>
         </div>
     </footer>

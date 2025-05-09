@@ -3,86 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Successful - TextFixer</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Free Account Created - TextFixer</title>
+    <link rel="stylesheet" href="styles-new.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .success-container {
-            text-align: center;
-            padding: 4rem 0;
             max-width: 800px;
             margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+        
+        .success-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
         }
         
         .success-icon {
-            font-size: 5rem;
-            color: #4caf50;
-            margin-bottom: 2rem;
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-success);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            font-size: 2.5rem;
         }
         
         .email-notice {
-            background-color: #e3f2fd;
-            border: 1px solid #bbdefb;
-            color: #1565c0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            text-align: left;
+            background-color: var(--color-info);
+            color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
         }
         
         .email-notice h3 {
-            margin-top: 0;
+            color: var(--color-white);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .email-notice ul {
+            margin-left: var(--spacing-xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .email-notice li {
+            list-style-type: disc;
+            margin-bottom: var(--spacing-sm);
         }
         
         .free-limits {
-            background-color: #fff8e1;
-            border: 1px solid #ffecb3;
-            color: #ff8f00;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            text-align: left;
+            background-color: var(--color-warning);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .free-limits h3 {
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .free-limits ul {
+            margin-left: var(--spacing-xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .free-limits li {
+            list-style-type: disc;
+            margin-bottom: var(--spacing-sm);
         }
         
         .instructions {
-            text-align: left;
-            margin: 2rem 0;
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .instructions h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-accent);
         }
         
         .instructions ol {
-            padding-left: 1.5rem;
+            margin-left: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
         }
         
         .instructions li {
-            margin-bottom: 1rem;
+            margin-bottom: var(--spacing-md);
         }
         
-        .download-button {
-            margin-top: 1rem;
+        .button-container {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
         }
         
         .upgrade-section {
-            margin-top: 3rem;
-            padding: 2rem;
-            background-color: #f5f5f7;
-            border-radius: 10px;
+            background-color: var(--color-tertiary);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .upgrade-section h3 {
+            color: var(--color-accent);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .support-note {
+            text-align: center;
+            margin: var(--spacing-xl) 0;
         }
     </style>
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <div class="container">
-            <h1>TextFixer</h1>
-            <p class="tagline">AI-Powered Text Correction in a Tap</p>
+            <div class="logo">
+                <h1>TextFixer</h1>
+                <p class="tagline">AI-Powered Text Correction</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="blog.html">Updates</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <div class="success-container container">
-        <div class="success-icon">✓</div>
-        <h1>Free Account Created!</h1>
-        <p>Thank you for registering with TextFixer. Your free account has been activated.</p>
+    <section class="page-header">
+        <div class="container">
+            <h2>Free Account Created</h2>
+            <p>Your TextFixer account has been activated</p>
+        </div>
+    </section>
+
+    <div class="success-container">
+        <div class="success-header">
+            <div class="success-icon">✓</div>
+            <h2>Thank You for Registering!</h2>
+            <p>Your free TextFixer account has been successfully created. You're now ready to start improving your texts.</p>
+        </div>
         
         <div class="email-notice">
-            <h3>📧 Check Your Email</h3>
+            <h3>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                </svg>
+                Check Your Email
+            </h3>
             <p>We've sent your TextFixer Access Code to your email address.</p>
             <p>This email contains:</p>
             <ul>
@@ -94,45 +181,93 @@
         </div>
         
         <div class="free-limits">
-            <h3>⚠️ Free Plan Limits</h3>
+            <h3>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 17C11.45 17 11 16.55 11 16V12C11 11.45 11.45 11 12 11C12.55 11 13 11.45 13 12V16C13 16.55 12.55 17 12 17ZM13 9H11V7H13V9Z" fill="#4A3933"/>
+                </svg>
+                Free Plan Limits
+            </h3>
             <p>Your free plan includes:</p>
             <ul>
-                <li><strong>5 text fixes per day</strong> - Reset daily at midnight</li>
-                <li><strong>Maximum 200 words per fix</strong> - Longer texts will be rejected</li>
+                <li><strong>20 text fixes per month</strong> - Reset monthly from your first usage</li>
+                <li><strong>Maximum 500 characters per fix</strong> - Longer texts will be truncated</li>
             </ul>
             <p>These limits apply across all your devices using the same Access Code.</p>
         </div>
         
         <div class="instructions">
-            <h2>Next Steps:</h2>
+            <h3>Next Steps</h3>
             <ol>
                 <li>Check your email for your Access Code</li>
-                <li>Download the TextFixer iOS Shortcut by clicking the button below</li>
+                <li>Download the TextFixer iOS Shortcut using the button below</li>
                 <li>When prompted during setup, enter your Access Code from the email</li>
-                <li>Start fixing text in any app with a single tap!</li>
+                <li>Select any text in any app, tap the share button, and choose TextFixer from the shortcuts menu</li>
             </ol>
-            <button class="cta-button download-button" id="download-shortcut">Download iOS Shortcut</button>
+            <div class="button-container">
+                <button class="btn btn-primary" id="download-shortcut">Download iOS Shortcut</button>
+                <a href="downloads.html" class="btn btn-secondary">View Setup Instructions</a>
+            </div>
         </div>
         
         <div class="upgrade-section">
             <h3>Want Unlimited Access?</h3>
-            <p>Upgrade to TextFixer Pro for unlimited text fixes, no word limits, and advanced improvements.</p>
-            <p>Just £2.49/month - cancel anytime.</p>
-            <a href="index.html#pricing" class="cta-button">Upgrade to Pro</a>
+            <p>Upgrade to TextFixer Pro for unlimited text fixes, no character limits, and advanced improvements.</p>
+            <p><strong>Just £2.49/month - cancel anytime.</strong></p>
+            <div class="button-container" style="justify-content: center;">
+                <a href="index.html#pricing" class="btn btn-primary">Upgrade to Pro</a>
+            </div>
         </div>
         
-        <p>If you have any questions, please contact our support team at <a href="mailto:support@example.com">support@example.com</a>.</p>
-        
-        <a href="index.html" class="cta-button">Back to Home</a>
+        <div class="support-note">
+            <p>If you have any questions, please contact our support team at <a href="mailto:support@textfixer.com">support@textfixer.com</a></p>
+            <a href="index.html" class="btn btn-text">Return to Home</a>
+        </div>
     </div>
 
-    <footer>
+    <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2025 TextFixer. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="mailto:support@example.com">Contact</a>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h2>TextFixer</h2>
+                    <p>AI-powered text correction in a tap.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="index.html#features">Features</a></li>
+                            <li><a href="index.html#pricing">Pricing</a></li>
+                            <li><a href="downloads.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Updates</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TextFixer. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -141,7 +276,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Download shortcut
             document.getElementById('download-shortcut').addEventListener('click', function() {
-                // In a real implementation, this would link to the iOS shortcut
+                // In production, this would download or open the iOS shortcut
                 window.location.href = 'https://www.icloud.com/shortcuts/your-shortcut-id';
             });
         });
