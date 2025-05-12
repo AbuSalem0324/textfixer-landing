@@ -53,6 +53,8 @@ export class APIService {
      * @returns {Promise<Object>} - Checkout session details
      * @throws {Error} - If API call fails
      */
+
+    
     async createCheckoutSession(email, successUrl, cancelUrl, planId = "pro") {
         try {
             const response = await fetch(`${this.baseUrl}/subscribe`, {
