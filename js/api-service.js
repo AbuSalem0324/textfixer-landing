@@ -12,39 +12,40 @@ export class APIService {
     }
     
     /**
-     * Create a user account via API
-     * @param {string} email - User's email address
-     * @param {string} subscriptionType - Subscription type ("free" or "pro")
-     * @param {boolean} sendEmail - Whether to send welcome email
-     * @returns {Promise<Object>} - API response data
-     * @throws {Error} - If API call fails
+     @param {string} email - User's email address
+ * @param {string} successUrl - URL to redirect after successful payment
+ * @param {string} cancelUrl - URL to redirect after cancelled payment
+ * @param {string} planId - Plan ID to subscribe to
+ * @returns {Promise<Object>} - Checkout session details
+ * @throws {Error} - If API call fails
      */
-    async createUserAccount(email, subscriptionType = "free", sendEmail = true) {
-        try {
-            const response = await fetch(`${this.baseUrl}/admin/create_user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    email: email,
-                    subscription_type: subscriptionType,
-                    send_email: sendEmail
-                })
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('API error:', errorText);
-                throw new Error('Failed to create user account');
-            }
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API service error:', error);
-            throw error;
+  async createCheckoutSession(email, successUrl, cancelUrl, planId = "pro") {
+    try {
+        const response = await fetch(`${this.baseUrl}/subscribe`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email,
+                success_url: successUrl,
+                cancel_url: cancelUrl,
+                plan_id: planId
+            })
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Checkout session error:', errorText);
+            throw new Error('Failed to create checkout session');
         }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Checkout session error:', error);
+        throw error;
     }
+}
     
     /**
      * Create a subscription checkout session

@@ -9,6 +9,28 @@ import { APIService } from './api-service.js';
 import { NavigationService } from './navigation-service.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+
+     // Handle dynamically created plan buttons
+    document.body.addEventListener('click', function(event) {
+        // Check if a plan button was clicked
+        if (event.target.matches('[data-plan-id]') || 
+            event.target.parentElement.matches('[data-plan-id]')) {
+            
+            const button = event.target.matches('[data-plan-id]') 
+                ? event.target 
+                : event.target.parentElement;
+                
+            const planId = button.getAttribute('data-plan-id');
+            
+            // If UI controller is available, open modal with this plan
+            if (window.uiController) {
+                window.uiController.openModal(planId);
+            }
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
     // Initialize services
     const apiService = new APIService(Config.API_URL);
     const navigationService = new NavigationService();

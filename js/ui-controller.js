@@ -4,21 +4,23 @@
  */
 
 import { Config } from './config.js';
+import { PlansService } from './plans-service.js';
+import { PlanCard } from './components/plan-card.js';
 
 export class UIController {
     /**
      * @param {Object} apiService - API service instance
      * @param {Object} navigationService - Navigation service instance
-     * @param {Object} plans - Available subscription plans
      */
-    constructor(apiService, navigationService, plans) {
+    constructor(apiService, navigationService) {
         this.apiService = apiService;
         this.navigationService = navigationService;
-        this.plans = plans;
+        this.plansService = new PlansService(apiService.baseUrl);
         
         // Internal state
-        this.state = {
-            selectedPlan: plans.PRO
+       this.state = {
+            selectedPlanId: null,
+            plans: []
         };
         
         // DOM elements will be cached during initialization
@@ -28,9 +30,42 @@ export class UIController {
     /**
      * Initialize the UI controller
      */
-    init() {
+    async init() {
         this.cacheElements();
         this.setupEventListeners();
+
+        // Load plans
+        try {
+            const plans = await this.plansService.getPlans();
+            this.state.plans = plans;
+            
+            // Render plans if pricing section exists
+            const pricingContainer = document.querySelector('.plan-comparison');
+            if (pricingContainer) {
+                this.renderPlans(pricingContainer);
+            }
+        } catch (error) {
+            console.error('Failed to load plans:', error);
+        }
+    }
+    
+    /**
+     * Render plans to the specified container
+     * @param {HTMLElement} container - Container to render plans into
+     */
+    renderPlans(container) {
+        // Clear container
+        container.innerHTML = '';
+        
+        // Render each plan
+        this.state.plans.forEach(plan => {
+            const isPro = plan.price > 0; // Pro plans have price > 0
+            new PlanCard(
+                plan, 
+                isPro, // Featured if it's a pro plan
+                (planId) => this.openModal(planId)
+            ).render(container);
+        });
     }
     
     /**
@@ -84,21 +119,29 @@ export class UIController {
     
     /**
      * Open the modal with appropriate settings for the selected plan
-     * @param {string} plan - Selected plan type
+     *  * @param {string} planId - Selected plan ID
      */
-    openModal(plan) {
-        this.state.selectedPlan = plan;
+    async openModal(planId) {
+        this.state.selectedPlanId = planId;
         
-        if (plan === this.plans.PRO) {
-            this.elements.modalTitle.textContent = Config.UI.MODAL_TITLES.PRO;
-            this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.PRO_SUBMIT;
-        } else {
-            this.elements.modalTitle.textContent = Config.UI.MODAL_TITLES.FREE;
-            this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.FREE_SUBMIT;
+        // Get plan details
+        const plan = await this.plansService.getPlan(planId);
+        
+        if (plan) {
+            // Update modal title and button text based on plan
+            if (plan.price > 0) {
+                this.elements.modalTitle.textContent = `Get ${plan.name}`;
+                this.elements.submitButton.textContent = 'Continue to Payment';
+            } else {
+                this.elements.modalTitle.textContent = `Get ${plan.name}`;
+                this.elements.submitButton.textContent = 'Create Free Account';
+            }
         }
         
         this.elements.modal.style.display = 'block';
     }
+
+
     
     /**
      * Close the modal
@@ -145,27 +188,28 @@ export class UIController {
         const originalButtonText = this.elements.submitButton.textContent;
         this.setLoadingState(true);
         
-        try {
-            // Determine subscription type based on selected plan
-            const subscriptionType = this.state.selectedPlan === this.plans.PRO ? "pro" : "free";
-            console.log(`Creating user account with subscription type: ${subscriptionType}`);
+         try {
+            // Get the selected plan
+            const plan = await this.plansService.getPlan(this.state.selectedPlanId);
             
-            // Create user account via API with the correct subscription type
+            // Create user account via API with the correct plan ID
+            const subscriptionType = plan.price > 0 ? "pro" : "free";
             const data = await this.apiService.createUserAccount(email, subscriptionType);
             
-            if (this.state.selectedPlan === this.plans.PRO) {
-                // For PRO plans, create a checkout session and redirect to Stripe
+            if (plan.price > 0) {
+                // For paid plans, create a checkout session and redirect to Stripe
                 try {
                     // Construct full URLs for success and cancel pages
-                    const successUrl = this.getFullPageUrl(Config.PAGES.PRO_SUCCESS);
-                    const cancelUrl = this.getFullPageUrl(Config.PAGES.CANCEL || 'index.html');
+                    const successUrl = this.navigationService.constructPath('success.html');
+                    const cancelUrl = this.navigationService.constructPath('index.html');
                     
                     console.log('Redirecting to checkout with success URL:', successUrl);
                     
                     const checkoutData = await this.apiService.createCheckoutSession(
                         email,
                         successUrl,
-                        cancelUrl
+                        cancelUrl,
+                        this.state.selectedPlanId
                     );
                     
                     // Redirect to Stripe checkout
@@ -186,6 +230,7 @@ export class UIController {
             console.error('Form submission error:', error);
             this.setLoadingState(false, originalButtonText);
         }
+    
     }
     
     /**
