@@ -28,7 +28,10 @@ export class PlanCard {
         
         // Add popular tag if featured
         if (this.isFeatured) {
-            card.innerHTML = '<div class="popular-tag">Most Popular</div>';
+            const popularTag = document.createElement('div');
+            popularTag.className = 'popular-tag';
+            popularTag.textContent = 'Most Popular';
+            card.appendChild(popularTag);
         }
         
         // Format price display
@@ -45,27 +48,28 @@ export class PlanCard {
         const buttonText = this.plan.price > 0 ? 'Subscribe' : 'Get Started';
         const buttonClass = this.plan.price > 0 ? 'btn-primary' : 'btn-secondary';
         
-        // Add card content
-        const content = `
-            <h3>${this.plan.name}</h3>
-            <div class="price">${priceDisplay}</div>
-            <ul class="benefits">
-                ${featuresList}
-            </ul>
-            <button class="btn ${buttonClass}" data-plan-id="${this.plan.id}">
-                ${buttonText}
-            </button>
-        `;
+        // Create card content
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = this.plan.name;
+        card.appendChild(titleElement);
         
-        // Append or set inner HTML based on whether we already added the popular tag
-        if (this.isFeatured) {
-            card.innerHTML += content;
-        } else {
-            card.innerHTML = content;
-        }
+        const priceElement = document.createElement('div');
+        priceElement.className = 'price';
+        priceElement.innerHTML = priceDisplay;
+        card.appendChild(priceElement);
+        
+        const benefitsList = document.createElement('ul');
+        benefitsList.className = 'benefits';
+        benefitsList.innerHTML = featuresList;
+        card.appendChild(benefitsList);
+        
+        const button = document.createElement('button');
+        button.className = `btn ${buttonClass}`;
+        button.setAttribute('data-plan-id', this.plan.id);
+        button.textContent = buttonText;
+        card.appendChild(button);
         
         // Add event listener to button
-        const button = card.querySelector('button');
         button.addEventListener('click', () => {
             if (this.onSelect) {
                 this.onSelect(this.plan.id);

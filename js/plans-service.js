@@ -48,6 +48,18 @@ export class PlansService {
                     ]
                 },
                 {
+                    id: 'basic',
+                    name: 'Basic Plan',
+                    price: 2.99,
+                    features: [
+                        'Unlimited text corrections',
+                        'Up to 2000 characters per fix',
+                        'Standard grammar and style improvements',
+                        'Works in any app',
+                        'Cancel anytime'
+                    ]
+                },
+                {
                     id: 'pro',
                     name: 'Pro Plan',
                     price: 4.99,

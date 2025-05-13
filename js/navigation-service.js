@@ -29,7 +29,7 @@ export class NavigationService {
     }
     
     /**
-     * Navigate to a success page
+     * Navigate to a page with optional parameters
      * @param {string} pageName - Name of the page to navigate to
      * @param {Object} [params] - URL parameters to add to the page URL
      */

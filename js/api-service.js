@@ -32,9 +32,11 @@ export class APIService {
             });
             
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('User creation error:', errorText);
-                throw new Error('Failed to create user account');
+                const errorData = await response.json().catch(() => null);
+                const errorMessage = errorData && errorData.error 
+                    ? errorData.error 
+                    : 'Failed to create user account';
+                throw new Error(errorMessage);
             }
             
             return await response.json();
@@ -53,8 +55,6 @@ export class APIService {
      * @returns {Promise<Object>} - Checkout session details
      * @throws {Error} - If API call fails
      */
-
-    
     async createCheckoutSession(email, successUrl, cancelUrl, planId = "pro") {
         try {
             const response = await fetch(`${this.baseUrl}/subscribe`, {
@@ -71,9 +71,11 @@ export class APIService {
             });
             
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Checkout session error:', errorText);
-                throw new Error('Failed to create checkout session');
+                const errorData = await response.json().catch(() => null);
+                const errorMessage = errorData && errorData.error 
+                    ? errorData.error 
+                    : 'Failed to create checkout session';
+                throw new Error(errorMessage);
             }
             
             return await response.json();
@@ -82,6 +84,4 @@ export class APIService {
             throw error;
         }
     }
-    
-    // You can add other API methods here as needed
 }

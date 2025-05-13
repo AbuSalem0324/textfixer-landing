@@ -9,67 +9,46 @@ import { APIService } from './api-service.js';
 import { NavigationService } from './navigation-service.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-
-     // Handle dynamically created plan buttons
-    document.body.addEventListener('click', function(event) {
-        // Check if a plan button was clicked
-        if (event.target.matches('[data-plan-id]') || 
-            event.target.parentElement.matches('[data-plan-id]')) {
-            
-            const button = event.target.matches('[data-plan-id]') 
-                ? event.target 
-                : event.target.parentElement;
-                
-            const planId = button.getAttribute('data-plan-id');
-            
-            // If UI controller is available, open modal with this plan
-            if (window.uiController) {
-                window.uiController.openModal(planId);
-            }
-        }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     // Initialize services
     const apiService = new APIService(Config.API_URL);
     const navigationService = new NavigationService();
     
     // Initialize UI controller with dependencies
-    const uiController = new UIController(
-        apiService, 
-        navigationService, 
-        Config.PLANS
-    );
+    const uiController = new UIController(apiService, navigationService);
     
     // Start the application
     uiController.init();
+    
+    // Initialize the slideshow if it exists
+    initializeSlideshow();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the slideshow
+// Slideshow functionality
+function initializeSlideshow() {
     let slideIndex = 1;
-    showSlides(slideIndex);
+    const slides = document.getElementsByClassName("benefit-slide");
+    const dots = document.getElementsByClassName("dot");
+    
+    if (slides.length === 0) return;
+    
+    // Show the first slide
+    showSlide(slideIndex);
     
     // Add global functions for navigation
     window.plusSlides = function(n) {
-        showSlides(slideIndex += n);
+        showSlide(slideIndex += n);
     };
     
     window.currentSlide = function(n) {
-        showSlides(slideIndex = n);
+        showSlide(slideIndex = n);
     };
     
     // Auto-advance slides every 5 seconds
     setInterval(function() {
-        plusSlides(1);
+        window.plusSlides(1);
     }, 5000);
     
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("benefit-slide");
-        let dots = document.getElementsByClassName("dot");
-        
+    function showSlide(n) {
         // Reset to first slide when reaching the end
         if (n > slides.length) {
             slideIndex = 1;
@@ -81,20 +60,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Hide all slides
-        for (i = 0; i < slides.length; i++) {
+        for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
             slides[i].classList.remove("active");
         }
         
         // Remove active class from all dots
-        for (i = 0; i < dots.length; i++) {
+        for (let i = 0; i < dots.length; i++) {
             dots[i].classList.remove("active");
         }
         
         // Show the current slide and activate corresponding dot
         slides[slideIndex-1].style.display = "block";
         slides[slideIndex-1].classList.add("active");
-        dots[slideIndex-1].classList.add("active");
+        
+        if (dots.length > 0 && slideIndex <= dots.length) {
+            dots[slideIndex-1].classList.add("active");
+        }
     }
     
     // Add swipe support for mobile devices
@@ -116,13 +98,13 @@ document.addEventListener('DOMContentLoaded', function() {
         function handleSwipe() {
             if (touchendX < touchstartX) {
                 // Swipe left - next slide
-                plusSlides(1);
+                window.plusSlides(1);
             }
             
             if (touchendX > touchstartX) {
                 // Swipe right - previous slide
-                plusSlides(-1);
+                window.plusSlides(-1);
             }
         }
     }
-});
+}

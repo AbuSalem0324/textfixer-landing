@@ -18,13 +18,16 @@ export class UIController {
         this.plansService = new PlansService(apiService.baseUrl);
         
         // Internal state
-       this.state = {
+        this.state = {
             selectedPlanId: null,
             plans: []
         };
         
         // DOM elements will be cached during initialization
         this.elements = {};
+        
+        // Make this instance available globally for event delegation
+        window.uiController = this;
     }
     
     /**
@@ -33,7 +36,7 @@ export class UIController {
     async init() {
         this.cacheElements();
         this.setupEventListeners();
-
+        
         // Load plans
         try {
             const plans = await this.plansService.getPlans();
@@ -57,12 +60,23 @@ export class UIController {
         // Clear container
         container.innerHTML = '';
         
+        // Sort plans by price to ensure proper order
+        const sortedPlans = [...this.state.plans].sort((a, b) => a.price - b.price);
+        
+        // Determine which plan to highlight
+        let featuredPlanId = 'pro'; // Default to highlighting the Pro plan
+        
+        // If we have exactly 3 plans, highlight the middle one (basic)
+        if (sortedPlans.length === 3) {
+            featuredPlanId = sortedPlans[1].id;
+        }
+        
         // Render each plan
-        this.state.plans.forEach(plan => {
-            const isPro = plan.price > 0; // Pro plans have price > 0
+        sortedPlans.forEach(plan => {
+            const isFeatured = plan.id === featuredPlanId;
             new PlanCard(
                 plan, 
-                isPro, // Featured if it's a pro plan
+                isFeatured,
                 (planId) => this.openModal(planId)
             ).render(container);
         });
@@ -74,9 +88,7 @@ export class UIController {
     cacheElements() {
         this.elements = {
             modal: document.getElementById('subscription-modal'),
-            subscribeButton: document.getElementById('subscribe-button'),
-            subscribeMonthly: document.getElementById('subscribe-monthly'),
-            tryFreeButton: document.getElementById('try-free'),
+            mainCta: document.getElementById('main-cta'),
             closeButton: document.querySelector('.close-button'),
             subscriptionForm: document.getElementById('subscription-form'),
             formError: document.getElementById('form-error'),
@@ -90,20 +102,15 @@ export class UIController {
      * Set up event listeners
      */
     setupEventListeners() {
-        // Pro subscription buttons
-        this.elements.subscribeButton.addEventListener('click', 
-            () => this.openModal(this.plans.PRO));
-            
-        this.elements.subscribeMonthly.addEventListener('click', 
-            () => this.openModal(this.plans.PRO));
-        
-        // Free tier button
-        this.elements.tryFreeButton.addEventListener('click', 
-            () => this.openModal(this.plans.FREE));
+        // Main CTA button
+        if (this.elements.mainCta) {
+            this.elements.mainCta.addEventListener('click', () => this.openModal('pro'));
+        }
         
         // Modal close button
-        this.elements.closeButton.addEventListener('click', 
-            () => this.closeModal());
+        if (this.elements.closeButton) {
+            this.elements.closeButton.addEventListener('click', () => this.closeModal());
+        }
         
         // Close modal when clicking outside
         window.addEventListener('click', (event) => {
@@ -113,13 +120,15 @@ export class UIController {
         });
         
         // Form submission
-        this.elements.subscriptionForm.addEventListener('submit', 
-            (event) => this.handleFormSubmit(event));
+        if (this.elements.subscriptionForm) {
+            this.elements.subscriptionForm.addEventListener('submit', 
+                (event) => this.handleFormSubmit(event));
+        }
     }
     
     /**
      * Open the modal with appropriate settings for the selected plan
-     *  * @param {string} planId - Selected plan ID
+     * @param {string} planId - Selected plan ID
      */
     async openModal(planId) {
         this.state.selectedPlanId = planId;
@@ -131,17 +140,15 @@ export class UIController {
             // Update modal title and button text based on plan
             if (plan.price > 0) {
                 this.elements.modalTitle.textContent = `Get ${plan.name}`;
-                this.elements.submitButton.textContent = 'Continue to Payment';
+                this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.PRO_SUBMIT;
             } else {
                 this.elements.modalTitle.textContent = `Get ${plan.name}`;
-                this.elements.submitButton.textContent = 'Create Free Account';
+                this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.FREE_SUBMIT;
             }
         }
         
-        this.elements.modal.style.display = 'block';
+        this.elements.modal.style.display = 'flex';
     }
-
-
     
     /**
      * Close the modal
@@ -157,17 +164,6 @@ export class UIController {
     resetForm() {
         this.elements.subscriptionForm.reset();
         this.elements.formError.textContent = '';
-    }
-    
-    /**
-     * Get the full absolute URL for a page name
-     * @param {string} pageName - Page name (e.g., "success.html")
-     * @returns {string} - Full URL
-     */
-    getFullPageUrl(pageName) {
-        // Get base URL from the current page
-        const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
-        return `${baseUrl}/${pageName}`;
     }
     
     /**
@@ -188,9 +184,13 @@ export class UIController {
         const originalButtonText = this.elements.submitButton.textContent;
         this.setLoadingState(true);
         
-         try {
+        try {
             // Get the selected plan
             const plan = await this.plansService.getPlan(this.state.selectedPlanId);
+            
+            if (!plan) {
+                throw new Error('Selected plan not found');
+            }
             
             // Create user account via API with the correct plan ID
             const subscriptionType = plan.price > 0 ? "pro" : "free";
@@ -203,13 +203,13 @@ export class UIController {
                     const successUrl = this.navigationService.constructPath('success.html');
                     const cancelUrl = this.navigationService.constructPath('index.html');
                     
-                    console.log('Redirecting to checkout with success URL:', successUrl);
+                    console.log('Creating checkout session for', plan.id, 'plan');
                     
                     const checkoutData = await this.apiService.createCheckoutSession(
                         email,
                         successUrl,
                         cancelUrl,
-                        this.state.selectedPlanId
+                        plan.id
                     );
                     
                     // Redirect to Stripe checkout
@@ -230,7 +230,6 @@ export class UIController {
             console.error('Form submission error:', error);
             this.setLoadingState(false, originalButtonText);
         }
-    
     }
     
     /**
@@ -238,13 +237,17 @@ export class UIController {
      * @param {Object} data - User account data from API
      */
     handleSuccessfulRegistration(data) {
-        const isPro = this.state.selectedPlan === this.plans.PRO;
+        const isPro = this.state.selectedPlanId !== 'free';
         const successPage = isPro ? Config.PAGES.PRO_SUCCESS : Config.PAGES.FREE_SUCCESS;
         
         // Prepare URL parameters
         const params = {};
         if (data.api_key) {
             params.api_key = data.api_key;
+        }
+        
+        if (data.user_id) {
+            params.user_id = data.user_id;
         }
         
         // Navigate to success page
