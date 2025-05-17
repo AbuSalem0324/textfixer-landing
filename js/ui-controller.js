@@ -193,7 +193,7 @@ export class UIController {
             }
             
             // Create user account via API with the correct plan ID
-            const subscriptionType = plan.price > 0 ? "pro" : "free";
+            const subscriptionType = plan.id; // Use the actual plan ID (free, basic, or pro)
             const data = await this.apiService.createUserAccount(email, subscriptionType);
             
             if (plan.price > 0) {
