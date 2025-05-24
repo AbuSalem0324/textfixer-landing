@@ -236,24 +236,27 @@ export class UIController {
      * Handle successful registration response
      * @param {Object} data - User account data from API
      */
-    handleSuccessfulRegistration(data) {
-        const isPro = this.state.selectedPlanId !== 'free';
-        const successPage = isPro ? Config.PAGES.PRO_SUCCESS : Config.PAGES.FREE_SUCCESS;
-        
-        // Prepare URL parameters
-        const params = {};
-        if (data.api_key) {
-            params.api_key = data.api_key;
-        }
-        
-        if (data.user_id) {
-            params.user_id = data.user_id;
-        }
-        
-        // Navigate to success page
-        this.navigationService.navigateToPage(successPage, params);
+    /**
+ * Handle successful registration response
+ * @param {Object} data - User account data from API
+ */
+handleSuccessfulRegistration(data) {
+    const isPaid = this.state.selectedPlanId !== 'free';
+    
+    // For FREE plans, redirect to the free-specific success page
+    if (!isPaid) {
+        this.navigationService.navigateToPage(Config.PAGES.FREE_SUCCESS, {
+            user_id: data.user_id
+        });
+        return;
     }
     
+    // For PAID plans, the user will be redirected to Stripe checkout
+    // After successful payment, Stripe will redirect to our unified success page
+    // This method won't be called for paid plans in the normal flow
+}
+
+
     /**
      * Set the loading state of the submit button
      * @param {boolean} isLoading - Whether loading is in progress

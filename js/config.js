@@ -13,9 +13,9 @@ export const Config = {
      * Redirection pages
      */
     PAGES: {
-        PRO_SUCCESS: 'success.html',
-        FREE_SUCCESS: 'free-success.html'
-    },
+    UNIFIED_SUCCESS: 'plan-change-success.html',  // New unified success page
+    FREE_SUCCESS: 'free-success.html'             // Keep free-specific page
+},
     
     /**
      * UI configuration
