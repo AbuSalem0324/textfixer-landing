@@ -170,67 +170,69 @@ export class UIController {
      * Handle form submission
      * @param {Event} event - Form submission event
      */
-    async handleFormSubmit(event) {
-        event.preventDefault();
-        
-        const email = this.elements.emailInput.value;
-        
-        if (!email) {
-            this.showError('Please enter your email address');
-            return;
-        }
-        
-        // Show loading state
-        const originalButtonText = this.elements.submitButton.textContent;
-        this.setLoadingState(true);
-        
-        try {
-            // Get the selected plan
-            const plan = await this.plansService.getPlan(this.state.selectedPlanId);
-            
-            if (!plan) {
-                throw new Error('Selected plan not found');
-            }
-            
-            // Create user account via API with the correct plan ID
-            const subscriptionType = plan.id; // Use the actual plan ID (free, basic, or pro)
-            const data = await this.apiService.createUserAccount(email, subscriptionType);
-            
-            if (plan.price > 0) {
-                // For paid plans, create a checkout session and redirect to Stripe
-                 try {
-                    // Construct full URLs for success and cancel pages  
-                    const successUrl = this.navigationService.constructPath(Config.PAGES.UNIFIED_SUCCESS);  // ✅ CORRECT
-                    const cancelUrl = this.navigationService.constructPath('index.html');
-                    
-                    console.log('Creating checkout session for', plan.id, 'plan');
-                    
-                    const checkoutData = await this.apiService.createCheckoutSession(
-                        email,
-                        successUrl,
-                        cancelUrl,
-                        plan.id
-                    );
-                    
-                    // Redirect to Stripe checkout
-                    window.location.href = checkoutData.checkout_url;
-                    return;
-                } catch (checkoutError) {
-                    console.error('Checkout error:', checkoutError);
-                    this.showError('Failed to create checkout session. Please try again.');
-                    this.setLoadingState(false, originalButtonText);
-                    return;
-                }
-            }
-            
-            // For FREE plans, redirect to success page
-            this.handleSuccessfulRegistration(data);
-        } catch (error) {
-            this.showError(error.message || 'An error occurred. Please try again.');
-            console.error('Form submission error:', error);
-            this.setLoadingState(false, originalButtonText);
-        }
+/**
+ * Handle form submission
+ * @param {Event} event - Form submission event
+ */
+async handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const email = this.elements.emailInput.value;
+    
+    if (!email) {
+        this.showError('Please enter your email address');
+        return;
     }
+    
+    // Show loading state
+    const originalButtonText = this.elements.submitButton.textContent;
+    this.setLoadingState(true);
+    
+    try {
+        // Get the selected plan
+        const plan = await this.plansService.getPlan(this.state.selectedPlanId);
+        
+        if (!plan) {
+            throw new Error('Selected plan not found');
+        }
+        
+        if (plan.price > 0) {
+            // For PAID plans, go directly to Stripe checkout
+            // Don't create/update user account until payment is confirmed
+            try {
+                // Construct full URLs for success and cancel pages  
+                const successUrl = this.navigationService.constructPath(Config.PAGES.UNIFIED_SUCCESS);
+                const cancelUrl = this.navigationService.constructPath('index.html');
+                
+                console.log('Creating checkout session for', plan.id, 'plan');
+                
+                const checkoutData = await this.apiService.createCheckoutSession(
+                    email,
+                    successUrl,
+                    cancelUrl,
+                    plan.id
+                );
+                
+                // Redirect to Stripe checkout
+                window.location.href = checkoutData.checkout_url;
+                return;
+            } catch (checkoutError) {
+                console.error('Checkout error:', checkoutError);
+                this.showError('Failed to create checkout session. Please try again.');
+                this.setLoadingState(false, originalButtonText);
+                return;
+            }
+        } else {
+            // For FREE plans only, create user account immediately
+            const data = await this.apiService.createUserAccount(email, plan.id);
+            this.handleSuccessfulRegistration(data);
+        }
+    } catch (error) {
+        this.showError(error.message || 'An error occurred. Please try again.');
+        console.error('Form submission error:', error);
+        this.setLoadingState(false, originalButtonText);
+    }
+}
     
     /**
      * Handle successful registration response
