@@ -243,17 +243,26 @@ export class UIController {
 handleSuccessfulRegistration(data) {
     const isPaid = this.state.selectedPlanId !== 'free';
     
-    // For FREE plans, redirect to the free-specific success page
-    if (!isPaid) {
-        this.navigationService.navigateToPage(Config.PAGES.FREE_SUCCESS, {
-            user_id: data.user_id
-        });
+    // For PAID plans, redirect to Stripe checkout
+    // After payment, Stripe will redirect to unified success page
+    if (isPaid) {
+        // This method won't be called for paid plans in normal flow
+        // as they redirect to Stripe checkout before reaching here
         return;
     }
     
-    // For PAID plans, the user will be redirected to Stripe checkout
-    // After successful payment, Stripe will redirect to our unified success page
-    // This method won't be called for paid plans in the normal flow
+    // For FREE plans, check if this is a new user or existing user
+    if (data.is_new_user) {
+        // New free user - use welcome page
+        this.navigationService.navigateToPage(Config.PAGES.FREE_SUCCESS, {
+            user_id: data.user_id
+        });
+    } else {
+        // Existing user downgrading to free - use unified page
+        this.navigationService.navigateToPage(Config.PAGES.UNIFIED_SUCCESS, {
+            user_id: data.user_id
+        });
+    }
 }
 
 

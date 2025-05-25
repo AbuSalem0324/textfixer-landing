@@ -350,6 +350,13 @@
             
             loadPlanChangeInfo(userId);
             
+            // Log the source for analytics
+            if (sessionId) {
+                console.log('Arrived from Stripe checkout session:', sessionId);
+            } else {
+                console.log('Direct access to plan change page');
+            }
+            
             // Copy API key functionality
             document.getElementById('copy-key').addEventListener('click', function() {
                 const apiKeyText = document.getElementById('api-key').textContent;
@@ -438,7 +445,7 @@
                 case 'upgrade':
                     return `🎉 Upgrade Successful!`;
                 case 'downgrade':
-                    return `Plan Changed Successfully`;
+                    return `Plan Updated`;
                 case 'renewal':
                     return `Subscription Renewed!`;
                 case 'new':
@@ -456,6 +463,17 @@
                 limitNote.innerHTML = '<strong>Note:</strong> Your free plan includes 20 text fixes per month with a 500 character limit per fix.';
                 limitNote.style.color = 'var(--color-warning)';
                 instructionsList.appendChild(limitNote);
+                
+                // Add instructions for free plan users
+                const upgradeNote = document.createElement('li');
+                upgradeNote.innerHTML = 'Want to remove limits? <a href="index.html#pricing" style="color: var(--color-accent);">Upgrade anytime</a> to get unlimited corrections.';
+                instructionsList.appendChild(upgradeNote);
+            } else {
+                // For paid plans, add benefits note
+                const benefitsNote = document.createElement('li');
+                benefitsNote.innerHTML = '<strong>Enjoy:</strong> Unlimited text corrections with your paid plan!';
+                benefitsNote.style.color = 'var(--color-success)';
+                instructionsList.appendChild(benefitsNote);
             }
         }
         
