@@ -198,9 +198,9 @@ export class UIController {
             
             if (plan.price > 0) {
                 // For paid plans, create a checkout session and redirect to Stripe
-                try {
-                    // Construct full URLs for success and cancel pages
-                    const successUrl = this.navigationService.constructPath('success.html');
+                 try {
+                    // Construct full URLs for success and cancel pages  
+                    const successUrl = this.navigationService.constructPath(Config.PAGES.UNIFIED_SUCCESS);  // ✅ CORRECT
                     const cancelUrl = this.navigationService.constructPath('index.html');
                     
                     console.log('Creating checkout session for', plan.id, 'plan');
