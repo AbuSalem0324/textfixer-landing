@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
@@ -214,6 +216,9 @@
                     <label for="email">Email:</label>
                     <input type="email" id="email" required placeholder="your@email.com">
                 </div>
+                <div class="form-group" id="turnstile-container" style="display: none;">
+        <div class="cf-turnstile" id="turnstile-widget"></div>
+    </div>
                 <button type="submit" class="btn btn-primary">Continue</button>
             </form>
             <div id="form-error" class="error"></div>

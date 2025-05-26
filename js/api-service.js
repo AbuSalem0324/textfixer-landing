@@ -18,7 +18,7 @@ export class APIService {
      * @returns {Promise<Object>} - User account details
      * @throws {Error} - If API call fails
      */
-    async createUserAccount(email, subscriptionType = "free") {
+    async createUserAccount(email, subscriptionType = "free", turnstileToken = null) {
         try {
             const response = await fetch(`${this.baseUrl}/register-free`, {
                 method: 'POST',
@@ -27,7 +27,8 @@ export class APIService {
                 },
                 body: JSON.stringify({ 
                     email,
-                    subscription_type: subscriptionType
+                    subscription_type: subscriptionType,
+                    turnstile_token: turnstileToken
                 })
             });
             

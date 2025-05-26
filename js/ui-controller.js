@@ -94,7 +94,9 @@ export class UIController {
             formError: document.getElementById('form-error'),
             modalTitle: document.querySelector('.modal-content h2'),
             submitButton: document.querySelector('.modal-content button[type="submit"]'),
-            emailInput: document.getElementById('email')
+            emailInput: document.getElementById('email'),
+            turnstileContainer: document.getElementById('turnstile-container'),
+            turnstileWidget: document.getElementById('turnstile-widget')
         };
     }
     
@@ -141,15 +143,51 @@ export class UIController {
             if (plan.price > 0) {
                 this.elements.modalTitle.textContent = `Get ${plan.name}`;
                 this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.PRO_SUBMIT;
+                // Hide Turnstile for paid plans
+                this.elements.turnstileContainer.style.display = 'none';
             } else {
                 this.elements.modalTitle.textContent = `Get ${plan.name}`;
                 this.elements.submitButton.textContent = Config.UI.BUTTON_LABELS.FREE_SUBMIT;
+                // Show and render Turnstile for free plans
+                this.elements.turnstileContainer.style.display = 'block';
+                this.renderTurnstile();
             }
         }
         
         this.elements.modal.style.display = 'flex';
     }
     
+
+        /**
+     * Render Turnstile widget for free plan verification
+     */
+    renderTurnstile() {
+        // Clear any existing widget
+        this.elements.turnstileWidget.innerHTML = '';
+        
+        // Render new Turnstile widget
+        if (window.turnstile) {
+            this.turnstileWidgetId = window.turnstile.render(this.elements.turnstileWidget, {
+                sitekey: Config.TURNSTILE.SITE_KEY,
+                callback: (token) => {
+                    this.turnstileToken = token;
+                    console.log('Turnstile validation successful');
+                },
+                'error-callback': () => {
+                    this.turnstileToken = null;
+                    this.showError('Verification failed. Please try again.');
+                },
+                'expired-callback': () => {
+                    this.turnstileToken = null;
+                    this.showError('Verification expired. Please verify again.');
+                }
+            });
+        } else {
+            console.error('Turnstile not loaded');
+            this.showError('Security verification unavailable. Please refresh the page.');
+        }
+    }
+
     /**
      * Close the modal
      */
@@ -164,12 +202,22 @@ export class UIController {
     resetForm() {
         this.elements.subscriptionForm.reset();
         this.elements.formError.textContent = '';
+        
+        // Reset Turnstile if it exists
+        if (this.turnstileWidgetId && window.turnstile) {
+            window.turnstile.reset(this.turnstileWidgetId);
+        }
+        this.turnstileToken = null;
     }
     
     /**
      * Handle form submission
      * @param {Event} event - Form submission event
      */
+/**
+ * Handle form submission
+ * @param {Event} event - Form submission event
+ */
 /**
  * Handle form submission
  * @param {Event} event - Form submission event
@@ -198,9 +246,7 @@ async handleFormSubmit(event) {
         
         if (plan.price > 0) {
             // For PAID plans, go directly to Stripe checkout
-            // Don't create/update user account until payment is confirmed
             try {
-                // Construct full URLs for success and cancel pages  
                 const successUrl = this.navigationService.constructPath(Config.PAGES.UNIFIED_SUCCESS);
                 const cancelUrl = this.navigationService.constructPath('index.html');
                 
@@ -223,8 +269,15 @@ async handleFormSubmit(event) {
                 return;
             }
         } else {
-            // For FREE plans only, create user account immediately
-            const data = await this.apiService.createUserAccount(email, plan.id);
+            // For FREE plans, validate Turnstile first
+            if (!this.turnstileToken) {
+                this.showError('Please complete the security verification');
+                this.setLoadingState(false, originalButtonText);
+                return;
+            }
+            
+            // Create user account with Turnstile token
+            const data = await this.apiService.createUserAccount(email, plan.id, this.turnstileToken);
             this.handleSuccessfulRegistration(data);
         }
     } catch (error) {
