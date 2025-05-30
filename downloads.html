@@ -89,36 +89,23 @@
                 <div class="step-content">
                     <h3>Start Using TextFixer</h3>
                     <p>Select any text in any app, tap the share button, and choose TextFixer from the shortcuts menu. Your text will be corrected instantly!</p>
+                    
+                    <!-- Video demo buttons -->
+                    <div class="button-container" style="margin-top: var(--spacing-lg);">
+                        <a href="index.html#how-it-works" class="btn btn-primary with-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 16.5V7.5L16 12L10 16.5Z" fill="currentColor"/>
+                            </svg>
+                            Watch Demo Video
+                        </a>
+                        <button class="btn btn-secondary" id="quick-demo">Quick Demo</button>
+                    </div>
+                    
                     <img src="/api/placeholder/400/200" alt="TextFixer in action" class="usage-demo">
                 </div>
             </div>
         </div>
         
-        <div class="versions-history">
-            <h3>Version History</h3>
-            <div class="version-item">
-                <div class="version-header">
-                    <h4>v1.2.1 (May 9, 2025)</h4>
-                    <span class="version-badge current">Current</span>
-                </div>
-                <ul class="version-changes">
-                    <li>Fixed an issue with special characters in some languages</li>
-                    <li>Improved error messaging for network failures</li>
-                    <li>Minor performance improvements</li>
-                </ul>
-            </div>
-            
-            <div class="version-item">
-                <div class="version-header">
-                    <h4>v1.2.0 (April 28, 2025)</h4>
-                </div>
-                <ul class="version-changes">
-                    <li>Added support for retaining original formatting</li>
-                    <li>Significantly improved processing speed</li>
-                    <li>Updated error handling and user feedback</li>
-                </ul>
-            </div>
-        </div>
         
         <div class="need-help">
             <h3>Need Help?</h3>
@@ -176,7 +163,16 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quick demo functionality
+            document.getElementById('quick-demo').addEventListener('click', function() {
+                // Open the video in a modal or navigate to the demo section
+                // For now, we'll navigate to the homepage demo
+                window.location.href = 'index.html#how-it-works';
+            });
+        });
+    </script>
     <script src="js/main.js" type="module"></script>
 </body>
-</html></div>
-                
+</html>
