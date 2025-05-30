@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - TextFixer</title>
+    <title>About & Updates - TextFixer</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="downloads.html">Downloads</a></li>
-                    <li><a href="blog.html">Updates</a></li>
+                    <li><a href="blog.html" class="active">Updates</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -29,100 +29,157 @@
 
     <section class="page-header">
         <div class="container">
-            <h2>Privacy Policy</h2>
-            <p>Last updated: May 9, 2025</p>
+            <h2>About & Updates</h2>
+            <p>The story behind TextFixer and our latest news</p>
         </div>
     </section>
 
-    <section class="privacy-content">
+    <section class="blog-content">
         <div class="container">
-            <div class="legal-document">
-                <div class="section-intro">
-                    <p>At TextFixer, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our text correction service.</p>
-                    <p>Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the service.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Information We Collect</h3>
-                    <p>We collect several types of information from and about users of our service, including:</p>
+            <div class="blog-grid">
+                <div class="blog-main">
+                    <!-- About Section - Fixed at top -->
+                    <div class="blog-post featured">
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-badge">About</span>
+                                <span class="post-date">The Story Behind TextFixer</span>
+                            </div>
+                            <h2 class="post-title">Why I Created TextFixer</h2>
+                            <div class="post-excerpt">
+                                <p>My name is <strong>Adam Szaloczi</strong>, and I created TextFixer to solve a problem that was driving me crazy: writing longer texts or comments and constantly worrying about imperfect writing.</p>
+                                
+                                <p>You know that feeling when you're crafting an important email, writing a social media post, or leaving a comment, and you're second-guessing every sentence? <em>"Does this sound professional? Did I make any typos? Is this clear enough?"</em></p>
+                                
+                                <p>I found myself constantly switching between apps, copying text to grammar checkers, or relying on separate tools that broke my writing flow. It was frustrating and time-consuming.</p>
+                                
+                                <p>I wanted to write more confidently without the mental overhead of switching apps or interrupting my thought process. The solution seemed simple: <strong>just write, and if I'm not sure about something, fix it right then and there</strong> - without leaving the app I'm already in.</p>
+                                
+                                <p>So I built TextFixer as an iOS Shortcut that works everywhere. Select any text, tap share, choose TextFixer, and boom - your text is instantly improved. No app switching, no copying and pasting, no breaking your flow.</p>
+                                
+                                <p>It started working so well for me that I wanted to share it with others. Turns out, I wasn't the only one with this problem! Now TextFixer helps thousands of people write with confidence every day.</p>
+                                
+                                <p>Whether you're a professional sending client emails, a student writing assignments, or just someone who wants their social media posts to look polished - TextFixer is here to help you communicate better, faster.</p>
+                                
+                                <p style="margin-top: var(--spacing-xl); font-style: italic; color: var(--color-text-light);">– Adam Szaloczi, Founder of TextFixer</p>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <h4>Personal Information</h4>
-                    <ul>
-                        <li>Email address (when you create an account)</li>
-                        <li>Payment information (processed through our payment provider Stripe)</li>
-                    </ul>
+                    <!-- Blog Posts -->
+                    <div class="blog-post">
+                        <div class="post-image">
+                            <svg width="100%" height="200" viewBox="0 0 400 200" style="background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-secondary) 100%);">
+                                <text x="200" y="100" text-anchor="middle" dominant-baseline="central" fill="var(--color-accent)" font-family="var(--font-heading)" font-size="24" font-weight="bold">TextFixer v1.2.1</text>
+                                <text x="200" y="130" text-anchor="middle" dominant-baseline="central" fill="var(--color-text)" font-family="var(--font-body)" font-size="16">Latest Update</text>
+                            </svg>
+                            <div class="post-badge">Update</div>
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-date">May 9, 2025</span>
+                            </div>
+                            <h3 class="post-title">TextFixer v1.2.1 Released</h3>
+                            <p class="post-excerpt">We've just released version 1.2.1 of the TextFixer iOS Shortcut with important bug fixes and improvements.</p>
+                            <div class="post-details">
+                                <h4>What's New:</h4>
+                                <ul>
+                                    <li><strong>Special Characters Fix:</strong> Resolved an issue where texts with special characters in some languages weren't processed correctly</li>
+                                    <li><strong>Better Error Messages:</strong> Network failures now show clearer, more helpful error messages</li>
+                                    <li><strong>Performance Improvements:</strong> Minor optimizations for faster text processing</li>
+                                </ul>
+                                <p><strong>How to Update:</strong> Simply download the latest version from our <a href="downloads.html">Downloads page</a>. Your API key will continue to work with the new version.</p>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <h4>Usage Information</h4>
-                    <ul>
-                        <li>Statistics about your text correction usage (frequency, character count)</li>
-                        <li>Information about your device and connection (IP address, browser type, operating system)</li>
-                    </ul>
+                    <div class="blog-post">
+                        <div class="post-image">
+                            <svg width="100%" height="200" viewBox="0 0 400 200" style="background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);">
+                                <text x="200" y="90" text-anchor="middle" dominant-baseline="central" fill="white" font-family="var(--font-heading)" font-size="20" font-weight="bold">Free Plan</text>
+                                <text x="200" y="120" text-anchor="middle" dominant-baseline="central" fill="white" font-family="var(--font-body)" font-size="16">Now Available</text>
+                                <circle cx="350" cy="50" r="30" fill="rgba(255,255,255,0.2)"/>
+                                <circle cx="50" cy="150" r="20" fill="rgba(255,255,255,0.1)"/>
+                            </svg>
+                            <div class="post-badge">Launch</div>
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-date">April 15, 2025</span>
+                            </div>
+                            <h3 class="post-title">Introducing Our Free Plan</h3>
+                            <p class="post-excerpt">We're excited to announce that TextFixer now offers a free plan, making AI-powered text correction accessible to everyone.</p>
+                            <div class="post-details">
+                                <p>Starting today, you can use TextFixer for free with our new free tier:</p>
+                                <ul>
+                                    <li><strong>20 text fixes per month</strong> - Perfect for occasional use</li>
+                                    <li><strong>500 character limit per fix</strong> - Great for social media posts and short emails</li>
+                                    <li><strong>No credit card required</strong> - Sign up with just your email</li>
+                                </ul>
+                                <p>This makes TextFixer accessible to students, casual users, and anyone who wants to try our service before upgrading to unlimited access.</p>
+                                <p><a href="index.html#pricing" class="btn btn-text">Try TextFixer Free →</a></p>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <h4>Text Content</h4>
-                    <p>The text you submit for correction is processed through our API and OpenAI's services. We maintain the following practices regarding your text:</p>
-                    <ul>
-                        <li>Text is processed securely through encrypted connections</li>
-                        <li>Text is not permanently stored after processing is complete</li>
-                        <li>Text is not used to train AI models</li>
-                        <li>Text is not shared with third parties except as required for the correction service</li>
-                    </ul>
+                    <div class="blog-post">
+                        <div class="post-image">
+                            <svg width="100%" height="200" viewBox="0 0 400 200" style="background: linear-gradient(135deg, var(--color-info) 0%, var(--color-success) 100%);">
+                                <text x="200" y="90" text-anchor="middle" dominant-baseline="central" fill="white" font-family="var(--font-heading)" font-size="18" font-weight="bold">TextFixer</text>
+                                <text x="200" y="120" text-anchor="middle" dominant-baseline="central" fill="white" font-family="var(--font-body)" font-size="16">Public Launch</text>
+                                <polygon points="180,140 200,160 220,140" fill="rgba(255,255,255,0.3)"/>
+                            </svg>
+                            <div class="post-badge">Milestone</div>
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-date">March 28, 2025</span>
+                            </div>
+                            <h3 class="post-title">TextFixer is Now Live!</h3>
+                            <p class="post-excerpt">After months of development and testing, TextFixer is officially available to the public. Here's what you need to know.</p>
+                            <div class="post-details">
+                                <p>What started as a personal solution to improve my own writing has grown into a tool that I'm proud to share with the world.</p>
+                                <p><strong>Key Features at Launch:</strong></p>
+                                <ul>
+                                    <li>AI-powered grammar and style corrections</li>
+                                    <li>Works in any iOS app through the share menu</li>
+                                    <li>Instant text replacement</li>
+                                    <li>Subscription-based pricing with unlimited usage</li>
+                                </ul>
+                                <p>Thank you to all the beta testers who helped make TextFixer better. Your feedback has been invaluable!</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="policy-section">
-                    <h3>How We Use Your Information</h3>
-                    <p>We use the information we collect to:</p>
-                    <ul>
-                        <li>Provide, maintain, and improve our service</li>
-                        <li>Process payments and manage your account</li>
-                        <li>Monitor usage patterns to optimize performance</li>
-                        <li>Send service-related notifications and updates</li>
-                        <li>Respond to your inquiries and customer service requests</li>
-                        <li>Protect against fraudulent, unauthorized, or illegal activity</li>
-                    </ul>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Data Sharing and Disclosure</h3>
-                    <p>We may share your information with:</p>
-                    <ul>
-                        <li><strong>Service Providers:</strong> Companies that help us deliver our service (e.g., payment processors, cloud hosting providers)</li>
-                        <li><strong>OpenAI:</strong> The text you submit for correction is processed through OpenAI's API</li>
-                        <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
-                    </ul>
-                    <p>We do not sell your personal information to third parties.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Data Security</h3>
-                    <p>We implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Your Rights</h3>
-                    <p>Depending on your location, you may have certain rights regarding your personal information, including:</p>
-                    <ul>
-                        <li>Accessing, correcting, or deleting your personal information</li>
-                        <li>Withdrawing consent where processing is based on consent</li>
-                        <li>Requesting restriction of processing</li>
-                        <li>Data portability</li>
-                    </ul>
-                    <p>To exercise these rights, please contact us at <a href="mailto:privacy@textfixer.com">privacy@textfixer.com</a>.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Children's Privacy</h3>
-                    <p>Our service is not intended for children under 16 years of age. We do not knowingly collect personal information from children under 16.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Changes to This Privacy Policy</h3>
-                    <p>We may update our privacy policy from time to time. We will notify you of any changes by posting the new privacy policy on this page and updating the "Last updated" date.</p>
-                </div>
-                
-                <div class="policy-section">
-                    <h3>Contact Us</h3>
-                    <p>If you have any questions about this privacy policy, please contact us at:</p>
-                    <p>Email: <a href="mailto:privacy@textfixer.com">privacy@textfixer.com</a></p>
+                <div class="blog-sidebar">
+                    <div class="sidebar-widget">
+                        <h4 class="widget-title">Quick Links</h4>
+                        <ul>
+                            <li><a href="downloads.html">Download TextFixer</a></li>
+                            <li><a href="index.html#pricing">View Pricing</a></li>
+                            <li><a href="contact.html">Contact Support</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h4 class="widget-title">Categories</h4>
+                        <ul class="category-list">
+                            <li><a href="#">Updates <span>1</span></a></li>
+                            <li><a href="#">Features <span>1</span></a></li>
+                            <li><a href="#">Announcements <span>2</span></a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget newsletter-widget">
+                        <h4 class="widget-title">Stay Updated</h4>
+                        <p>Get notified about new features and updates.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,8 +207,7 @@
                     <div class="link-group">
                         <h4>Company</h4>
                         <ul>
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="blog.html">Updates</a></li>
+                            <li><a href="blog.html">About & Updates</a></li>
                             <li><a href="contact.html">Contact</a></li>
                         </ul>
                     </div>
@@ -176,6 +232,19 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Newsletter form submission
+            document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                if (email) {
+                    alert('Thank you! We\'ll keep you updated on TextFixer news.');
+                    this.reset();
+                }
+            });
+        });
+    </script>
     <script src="js/main.js" type="module"></script>
 </body>
 </html>
