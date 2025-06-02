@@ -36,6 +36,7 @@ export class UIController {
     async init() {
         this.cacheElements();
         this.setupEventListeners();
+        this.setupShortcutDownloads();
         
         // Load plans
         try {
@@ -393,5 +394,34 @@ setupShortcutDownloads() {
      */
     showError(message) {
         this.elements.formError.textContent = message;
+    }
+
+    /**
+     * Set up shortcut download functionality
+     */
+    setupShortcutDownloads() {
+        // Replace this with your actual iCloud shortcut URL when you have it
+        const SHORTCUT_URL = 'https://www.icloud.com/shortcuts/a75cd95a8587445c8101602dadd51f5f';
+        
+        // Find all download buttons
+        const downloadButtons = document.querySelectorAll(
+            '#download-shortcut, .download-button, [data-download="shortcut"]'
+        );
+        
+        downloadButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                
+                if (isIOS) {
+                    // Direct link for iOS users
+                    window.location.href = SHORTCUT_URL;
+                } else {
+                    // Helpful message for non-iOS users
+                    alert('TextFixer Shortcut is designed for iPhone and iPad. Please visit this page on your iOS device to download.');
+                }
+            });
+        });
     }
 }
