@@ -207,24 +207,36 @@
     </section>
 
     <div id="subscription-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Get TextFixer</h2>
-            <p>Enter your email to continue:</p>
-            <form id="subscription-form">
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" required placeholder="your@email.com">
-                </div>
-                <div class="form-group" id="turnstile-container" style="display: none;">
-        <div class="cf-turnstile" id="turnstile-widget"></div>
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Get TextFixer</h2>
+        <p>Enter your email to continue:</p>
+        <form id="subscription-form">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required placeholder="your@email.com">
+            </div>
+            
+            <div class="form-group" id="turnstile-container" style="display: none;">
+                <div class="cf-turnstile" id="turnstile-widget"></div>
+            </div>
+            
+            <!-- NEW: Terms acceptance checkbox -->
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    <span class="checkbox-text">
+                        I agree to the <a href="terms.html" target="_blank">Terms of Service</a> 
+                        and <a href="privacy.html" target="_blank">Privacy Policy</a>
+                    </span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Continue</button>
+        </form>
+        <div id="form-error" class="error"></div>
     </div>
-                <button type="submit" class="btn btn-primary">Continue</button>
-            </form>
-            <div id="form-error" class="error"></div>
-        </div>
-    </div>
-
+</div>
     <footer class="site-footer">
         <div class="container">
             <div class="footer-content">

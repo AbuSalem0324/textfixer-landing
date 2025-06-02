@@ -200,15 +200,18 @@ export class UIController {
      * Reset the form to its initial state
      */
     resetForm() {
-        this.elements.subscriptionForm.reset();
-        this.elements.formError.textContent = '';
-        
-        // Reset Turnstile if it exists
-        if (this.turnstileWidgetId && window.turnstile) {
-            window.turnstile.reset(this.turnstileWidgetId);
-        }
-        this.turnstileToken = null;
+    this.elements.subscriptionForm.reset();
+    this.elements.formError.textContent = '';
+    
+    // Reset terms checkbox
+    document.getElementById('terms-checkbox').checked = false;
+    
+    // Reset Turnstile if it exists
+    if (this.turnstileWidgetId && window.turnstile) {
+        window.turnstile.reset(this.turnstileWidgetId);
     }
+    this.turnstileToken = null;
+}
     
     /**
      * Handle form submission
@@ -226,9 +229,17 @@ async handleFormSubmit(event) {
     event.preventDefault();
     
     const email = this.elements.emailInput.value;
+    const termsAccepted = document.getElementById('terms-checkbox').checked;
     
+    // Validate email
     if (!email) {
         this.showError('Please enter your email address');
+        return;
+    }
+    
+    // Validate terms acceptance
+    if (!termsAccepted) {
+        this.showError('Please accept the Terms of Service and Privacy Policy to continue');
         return;
     }
     
@@ -285,6 +296,21 @@ async handleFormSubmit(event) {
         console.error('Form submission error:', error);
         this.setLoadingState(false, originalButtonText);
     }
+}
+
+// Also update the resetForm method to reset the checkbox
+resetForm() {
+    this.elements.subscriptionForm.reset();
+    this.elements.formError.textContent = '';
+    
+    // Reset terms checkbox
+    document.getElementById('terms-checkbox').checked = false;
+    
+    // Reset Turnstile if it exists
+    if (this.turnstileWidgetId && window.turnstile) {
+        window.turnstile.reset(this.turnstileWidgetId);
+    }
+    this.turnstileToken = null;
 }
     
     /**

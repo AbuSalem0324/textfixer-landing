@@ -150,7 +150,47 @@ p {
  * LAYOUT & CONTAINERS
  * =============================================================================
  */
-.container {
+
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin: 0;
+    flex-shrink: 0;
+    margin-top: 2px; /* Align with first line of text */
+}
+
+.checkbox-text {
+    color: var(--color-text);
+}
+
+.checkbox-text a {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.checkbox-text a:hover {
+    color: var(--color-accent-light);
+}
+
+/* Error state for checkbox */
+.form-group .checkbox-label.error {
+    color: var(--color-error);
+}
+
+.form-group .checkbox-label.error input[type="checkbox"] {
+    border-color: var(--color-error);
+}
+
+
+ .container {
     width: 90%;
     max-width: var(--container-width);
     margin: 0 auto;
