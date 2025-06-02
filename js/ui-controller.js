@@ -36,7 +36,6 @@ export class UIController {
     async init() {
         this.cacheElements();
         this.setupEventListeners();
-        this.setupShortcutDownloads();
         
         // Load plans
         try {
@@ -372,8 +371,4 @@ handleSuccessfulRegistration(data) {
         this.elements.formError.textContent = message;
     }
 
-    /**
-     * Set up shortcut download functionality
-     */
-    
 }
