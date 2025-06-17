@@ -64,7 +64,7 @@ export class UIController {
         const sortedPlans = [...this.state.plans].sort((a, b) => a.price - b.price);
         
         // Determine which plan to highlight
-        let featuredPlanId = 'pro'; // Default to highlighting the Pro plan
+      let featuredPlanId = 'basic';
         
         // If we have exactly 3 plans, highlight the middle one (basic)
         if (sortedPlans.length === 3) {
