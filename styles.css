@@ -1321,6 +1321,7 @@ section {
     display: flex;
     gap: var(--spacing-xl);
     margin-bottom: var(--spacing-xxl);
+    flex-wrap: wrap;
 }
 
 .download-step {
@@ -1332,6 +1333,7 @@ section {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
     transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    min-width: 280px;
 }
 
 .download-step:hover {
@@ -1381,6 +1383,9 @@ section {
     transition: background-color var(--transition-fast), transform var(--transition-fast);
     box-shadow: var(--shadow-sm);
     margin-top: var(--spacing-md);
+    text-decoration: none;
+    width: 100%;
+    justify-content: center;
 }
 
 .download-button:hover {
@@ -1494,14 +1499,24 @@ section {
     margin-bottom: var(--spacing-lg);
 }
 
-/* Elevate all buttons on hover/focus, remove overlay effect */
+.button-container {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+/* 
+ * =============================================================================
+ * BUTTON HOVER EFFECTS
+ * =============================================================================
+ */
 a.btn,
 a.download-button,
 button,
 input[type="submit"],
 input[type="button"] {
     transition: box-shadow 0.18s cubic-bezier(.4,2,.6,1), transform 0.18s cubic-bezier(.4,2,.6,1), background 0.18s;
-    /* Remove any overlay background if present */
 }
 
 a.btn:hover,
@@ -1516,11 +1531,10 @@ input[type="button"]:hover,
 input[type="button"]:focus {
     box-shadow: 0 6px 24px rgba(0,0,0,0.16), 0 1.5px 6px rgba(0,0,0,0.10);
     transform: translateY(-3px) scale(1.03);
-    background: inherit; /* Remove overlay if any */
+    background: inherit;
     outline: none;
 }
 
-/* If you have a specific overlay class or pseudo-element, disable it for buttons */
 a.btn::after,
 a.download-button::after {
     display: none !important;
@@ -1530,10 +1544,29 @@ a.download-button::after {
 
 /* 
  * =============================================================================
- * RESPONSIVE STYLES
+ * MOBILE RESPONSIVE FIXES FOR DOWNLOADS PAGE
  * =============================================================================
  */
+
+/* Enhanced Mobile Media Queries */
 @media (max-width: 992px) {
+    /* Tablet adjustments */
+    .download-row {
+        gap: var(--spacing-lg);
+    }
+    
+    .download-step {
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        min-width: 250px;
+    }
+    
+    .step-number {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
     .hero .container {
         flex-direction: column;
         text-align: center;
@@ -1541,10 +1574,6 @@ a.download-button::after {
     
     .hero-buttons {
         justify-content: center;
-    }
-    
-    .testimonial-slider {
-        flex-direction: column;
     }
     
     .footer-content {
@@ -1562,6 +1591,7 @@ a.download-button::after {
 }
 
 @media (max-width: 768px) {
+    /* Mobile layout fixes */
     h1 {
         font-size: 2rem;
     }
@@ -1588,21 +1618,136 @@ a.download-button::after {
         gap: var(--spacing-md);
     }
     
-    .benefit-item,
+    /* Downloads page mobile fixes */
+    .downloads-content {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .download-row {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .download-step {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+        min-width: auto;
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .step-content {
+        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;  
+        align-items: center;
+    }
+    
+    .step-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .step-content p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    /* Download button mobile improvements */
+    .download-button {
+        padding: var(--spacing-md);
+        font-size: 0.95rem;
+        gap: var(--spacing-sm);
+        border-radius: var(--border-radius-md);
+        margin-top: var(--spacing-sm);
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .download-info {
+        text-align: center;
+    }
+    
+    .download-title {
+        font-size: 1rem;
+        display: block;
+        margin-bottom: 2px;
+    }
+    
+    .download-version {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+    
+    /* Info alert mobile fixes */
+    .info-alert {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+        margin-top: var(--spacing-md);
+    }
+    
+    .info-alert svg {
+        align-self: center;
+    }
+    
+    /* Button container mobile fixes */
+    .button-container {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        align-items: center;
+        width: 100%;
+    }
+    
+    .button-container .btn {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    /* Need help section mobile fixes */
+    .need-help {
+        margin-top: var(--spacing-xl);
+        padding: var(--spacing-lg);
+        text-align: center;
+    }
+    
+    .need-help h3 {
+        font-size: 1.4rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .need-help p {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    /* General mobile improvements */
     .step-card,
     .use-case-card {
         padding: var(--spacing-md);
     }
     
-    .contact-grid,
-    .downloads-extras {
-        grid-template-columns: 1fr;
+    .contact-grid {
+        flex-direction: column;
     }
     
-    .step-item {
+    .blog-grid {
         flex-direction: column;
-        text-align: center;
-        align-items: center;
     }
     
     .footer-bottom {
@@ -1613,6 +1758,7 @@ a.download-button::after {
 }
 
 @media (max-width: 576px) {
+    /* Extra small mobile devices */
     .main-nav ul {
         flex-wrap: wrap;
         justify-content: center;
@@ -1629,7 +1775,128 @@ a.download-button::after {
         grid-template-columns: 1fr;
     }
     
-    .blog-grid {
-        flex-direction: column;
+    /* Downloads page extra small mobile */
+    .downloads-content {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .download-step {
+        padding: var(--spacing-md);
+        margin: 0 var(--spacing-xs);
+    }
+    
+    .step-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .step-content p {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .download-button {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+        gap: var(--spacing-xs);
+        max-width: 280px;
+    }
+    
+    .download-title {
+        font-size: 0.95rem;
+    }
+    
+    .download-version {
+        font-size: 0.75rem;
+    }
+    
+    /* Page header mobile adjustments */
+    .page-header {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .page-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .page-header p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Touch-friendly Improvements */
+@media (hover: none) and (pointer: coarse) {
+    .download-button {
+        min-height: 48px;
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    .btn {
+        min-height: 44px;
+        padding: var(--spacing-sm) var(--spacing-lg);
+    }
+    
+    .download-step {
+        transform: none !important;
+    }
+}
+
+/* Improve Text Readability on Mobile */
+@media (max-width: 768px) {
+    .step-content {
+        line-height: 1.6;
+    }
+    
+    .download-info {
+        line-height: 1.4;
+    }
+    
+    .download-step {
+        border: 1px solid var(--color-secondary);
+    }
+}
+
+/* Prevent Horizontal Scroll Issues */
+.downloads-content .container {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: var(--container-width);
+}
+
+/* Flexible Image Handling */
+.download-step img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Better Focus States for Accessibility */
+.download-button:focus,
+.btn:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(164, 92, 64, 0.2);
+}
+
+/* Additional responsive utility classes */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
     }
 }
