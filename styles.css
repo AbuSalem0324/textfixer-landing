@@ -1377,15 +1377,33 @@ section {
     align-items: center;
     background-color: var(--color-accent);
     color: var(--color-white);
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: 0; /* Remove padding to control spacing manually */
     border-radius: var(--border-radius-md);
-    gap: var(--spacing-md);
+    gap: 0; /* Remove gap, we'll handle spacing manually */
     transition: background-color var(--transition-fast), transform var(--transition-fast);
     box-shadow: var(--shadow-sm);
     margin-top: var(--spacing-md);
     text-decoration: none;
     width: 100%;
+    justify-content: flex-start;
+    min-height: 60px; /* Set minimum height for consistent sizing */
+}
+
+
+.download-icon-container {
+    width: 60px; /* Fixed width for icon area */
+    height: 100%; /* Full height of button */
+    min-height: 60px; /* Match button min-height */
+    
+    display: flex;
+    align-items: center;
     justify-content: center;
+    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); /* Rounded left corners only */
+}
+
+.download-icon-container img {
+    width: 48px;
+    height: 48px;
 }
 
 .download-button:hover {
@@ -1397,6 +1415,8 @@ section {
 .download-info {
     display: flex;
     flex-direction: column;
+    padding: var(--spacing-md) var(--spacing-lg);
+    flex: 1;
 }
 
 .download-title {
