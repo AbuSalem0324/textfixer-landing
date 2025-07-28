@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .form-success {
             background-color: var(--color-success);
@@ -51,7 +52,7 @@
     <section class="page-header">
         <div class="container">
             <h2>Contact Us</h2>
-            <p>We're here to help with any questions or feedback</p>
+            <p><span id="typing-text-contact">We're here to help with any questions or feedback</span><span class="typing-cursor">|</span></p>
         </div>
     </section>
 
@@ -217,6 +218,83 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Typing animation for Contact page
+            const typingElement = document.getElementById('typing-text-contact');
+            if (typingElement) {
+                // Animation sequence: We're here to help with any questions or feedback → Were here to help, with any question's or feedbacks → fix it
+                const finalText = "We're here to help with any questions or feedback";
+                const mistakenText = "Were here to help, with any question's or feedbacks";
+                const backspaceToText = "We";
+                
+                // Clear the text initially
+                typingElement.textContent = '';
+                
+                // Typing speeds (ms)
+                const typeSpeed = 100;
+                const backspaceSpeed = 50;
+                const pauseAfterMistake = 800;
+                const pauseBeforeCorrection = 300;
+                
+                let currentText = '';
+                let phase = 'typing-mistake';
+                
+                const animate = () => {
+                    switch (phase) {
+                        case 'typing-mistake':
+                            if (currentText.length < mistakenText.length) {
+                                currentText += mistakenText[currentText.length];
+                                typingElement.textContent = currentText;
+                                setTimeout(animate, typeSpeed + (Math.random() * 40 - 20));
+                            } else {
+                                phase = 'pausing';
+                                setTimeout(animate, pauseAfterMistake);
+                            }
+                            break;
+                            
+                        case 'pausing':
+                            phase = 'backspacing';
+                            animate();
+                            break;
+                            
+                        case 'backspacing':
+                            if (currentText.length > backspaceToText.length) {
+                                currentText = currentText.slice(0, -1);
+                                typingElement.textContent = currentText;
+                                setTimeout(animate, backspaceSpeed);
+                            } else {
+                                phase = 'pausing-2';
+                                setTimeout(animate, pauseBeforeCorrection);
+                            }
+                            break;
+                            
+                        case 'pausing-2':
+                            phase = 'typing-correct';
+                            animate();
+                            break;
+                            
+                        case 'typing-correct':
+                            if (currentText.length < finalText.length) {
+                                currentText += finalText[currentText.length];
+                                typingElement.textContent = currentText;
+                                setTimeout(animate, typeSpeed);
+                            } else {
+                                // Animation complete - hide cursor after a delay
+                                setTimeout(() => {
+                                    const contactP = typingElement.closest('p');
+                                    if (contactP) {
+                                        contactP.classList.add('typing-complete');
+                                    }
+                                }, 2000);
+                            }
+                            break;
+                    }
+                };
+                
+                // Start animation after a brief delay
+                setTimeout(animate, 500);
+            }
+            
+            // Contact form functionality
             const form = document.getElementById('contact-form');
             const submitBtn = document.getElementById('submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');

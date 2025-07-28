@@ -36,6 +36,8 @@ export class UIController {
     async init() {
         this.cacheElements();
         this.setupEventListeners();
+        this.initFeaturesAnimation();
+        this.initTypingAnimation();
         
         // Load plans
         try {
@@ -369,6 +371,124 @@ handleSuccessfulRegistration(data) {
      */
     showError(message) {
         this.elements.formError.textContent = message;
+    }
+    
+    /**
+     * Initialize features section animation with individual card observers
+     */
+    initFeaturesAnimation() {
+        const featureCards = document.querySelectorAll('.feature-card');
+        if (!featureCards.length) return;
+        
+        // Feature detection with fallback
+        if ('IntersectionObserver' in window) {
+            // Modern approach: individual observer for each card
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Trigger animation for this specific card
+                        entry.target.classList.add('animate');
+                        // Stop observing this card once animated
+                        cardObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1, // Trigger when 10% of card is visible
+                rootMargin: '0px 0px -50px 0px' // Start animation before card is fully in view
+            });
+            
+            // Observe each card individually
+            featureCards.forEach(card => {
+                cardObserver.observe(card);
+            });
+        } else {
+            // Fallback for older browsers: staggered delay-based animation
+            featureCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate');
+                }, 1000 + (index * 150)); // 150ms delay between each card
+            });
+        }
+    }
+    
+    /**
+     * Initialize typing animation for hero heading
+     */
+    initTypingAnimation() {
+        const typingElement = document.getElementById('typing-text');
+        if (!typingElement) return;
+        
+        // Animation sequence
+        const finalText = 'Perfect Your Writing in a Single Tap';
+        const mistakenText = 'Perfect Your Writing in a Sinleg Tpa';
+        const backspaceToText = 'Perfect Your Writing in a Sin';
+        
+        // Clear the text initially
+        typingElement.textContent = '';
+        
+        // Typing speeds (ms)
+        const typeSpeed = 100;
+        const backspaceSpeed = 50;
+        const pauseAfterMistake = 800;
+        const pauseBeforeCorrection = 300;
+        
+        let currentText = '';
+        let phase = 'typing-mistake'; // typing-mistake, pausing, backspacing, pausing-2, typing-correct
+        
+        const animate = () => {
+            switch (phase) {
+                case 'typing-mistake':
+                    if (currentText.length < mistakenText.length) {
+                        currentText += mistakenText[currentText.length];
+                        typingElement.textContent = currentText;
+                        setTimeout(animate, typeSpeed + (Math.random() * 40 - 20)); // Add slight variation
+                    } else {
+                        phase = 'pausing';
+                        setTimeout(animate, pauseAfterMistake);
+                    }
+                    break;
+                    
+                case 'pausing':
+                    phase = 'backspacing';
+                    animate();
+                    break;
+                    
+                case 'backspacing':
+                    if (currentText.length > backspaceToText.length) {
+                        currentText = currentText.slice(0, -1);
+                        typingElement.textContent = currentText;
+                        setTimeout(animate, backspaceSpeed);
+                    } else {
+                        phase = 'pausing-2';
+                        setTimeout(animate, pauseBeforeCorrection);
+                    }
+                    break;
+                    
+                case 'pausing-2':
+                    phase = 'typing-correct';
+                    animate();
+                    break;
+                    
+                case 'typing-correct':
+                    if (currentText.length < finalText.length) {
+                        currentText += finalText[currentText.length];
+                        typingElement.textContent = currentText;
+                        setTimeout(animate, typeSpeed);
+                    } else {
+                        // Animation complete - hide cursor after a delay
+                        setTimeout(() => {
+                            const heroH2 = typingElement.closest('h2');
+                            if (heroH2) {
+                                heroH2.classList.add('typing-complete');
+                            }
+                        }, 2000);
+                    }
+                    break;
+            }
+        };
+        
+        // Start animation after a brief delay
+        setTimeout(animate, 500);
     }
 
 }

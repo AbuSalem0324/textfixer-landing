@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <header class="site-header">
@@ -30,7 +31,7 @@
 
     <section class="page-header">
         <div class="container">
-            <h2>Downloads</h2>
+            <h2><span id="typing-text-downloads">Downloads</span><span class="typing-cursor">|</span></h2>
             <p>Get TextFixer for your devices</p>
         </div>
     </section>
@@ -191,3 +192,90 @@
                 <p>&copy; 2025 TextFixer. All rights reserved.</p>
                 <div class="social-links">
                     <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Typing animation for Downloads page
+        document.addEventListener('DOMContentLoaded', function() {
+            const typingElement = document.getElementById('typing-text-downloads');
+            if (!typingElement) return;
+            
+            // Animation sequence: Downloads → Donwlodas → fix it
+            const finalText = 'Downloads';
+            const mistakenText = 'Donwlodas';
+            const backspaceToText = 'Do';
+            
+            // Clear the text initially
+            typingElement.textContent = '';
+            
+            // Typing speeds (ms)
+            const typeSpeed = 100;
+            const backspaceSpeed = 50;
+            const pauseAfterMistake = 800;
+            const pauseBeforeCorrection = 300;
+            
+            let currentText = '';
+            let phase = 'typing-mistake';
+            
+            const animate = () => {
+                switch (phase) {
+                    case 'typing-mistake':
+                        if (currentText.length < mistakenText.length) {
+                            currentText += mistakenText[currentText.length];
+                            typingElement.textContent = currentText;
+                            setTimeout(animate, typeSpeed + (Math.random() * 40 - 20));
+                        } else {
+                            phase = 'pausing';
+                            setTimeout(animate, pauseAfterMistake);
+                        }
+                        break;
+                        
+                    case 'pausing':
+                        phase = 'backspacing';
+                        animate();
+                        break;
+                        
+                    case 'backspacing':
+                        if (currentText.length > backspaceToText.length) {
+                            currentText = currentText.slice(0, -1);
+                            typingElement.textContent = currentText;
+                            setTimeout(animate, backspaceSpeed);
+                        } else {
+                            phase = 'pausing-2';
+                            setTimeout(animate, pauseBeforeCorrection);
+                        }
+                        break;
+                        
+                    case 'pausing-2':
+                        phase = 'typing-correct';
+                        animate();
+                        break;
+                        
+                    case 'typing-correct':
+                        if (currentText.length < finalText.length) {
+                            currentText += finalText[currentText.length];
+                            typingElement.textContent = currentText;
+                            setTimeout(animate, typeSpeed);
+                        } else {
+                            // Animation complete - hide cursor after a delay
+                            setTimeout(() => {
+                                const headerH2 = typingElement.closest('h2');
+                                if (headerH2) {
+                                    headerH2.classList.add('typing-complete');
+                                }
+                            }, 2000);
+                        }
+                        break;
+                }
+            };
+            
+            // Start animation after a brief delay
+            setTimeout(animate, 500);
+        });
+    </script>
+</body>
+</html>

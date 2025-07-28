@@ -444,6 +444,27 @@ section {
     margin-bottom: var(--spacing-xl);
 }
 
+/* Typing animation cursor */
+.typing-cursor {
+    animation: blink 1s infinite;
+    font-weight: 300;
+    color: var(--color-accent);
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Hide cursor when animation is complete */
+.typing-complete .typing-cursor {
+    display: none;
+}
+
 .hero-image {
     flex: 1;
     display: flex;
@@ -716,6 +737,164 @@ section {
     margin-bottom: 0;
 }
 
+
+/* 
+ * =============================================================================
+ * FEATURES SECTION
+ * =============================================================================
+ */
+.features {
+    background-color: var(--color-primary);
+    padding: var(--spacing-xxxl) 0;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    
+    /* Initial state - hidden until animated */
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+/* Animation trigger class */
+.feature-card.animate {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Staggered animation delays - applied when .animate class is added */
+.feature-card.animate[data-delay="0"] { animation-delay: 0.1s; }
+.feature-card.animate[data-delay="1"] { animation-delay: 0.25s; }
+.feature-card.animate[data-delay="2"] { animation-delay: 0.4s; }
+.feature-card.animate[data-delay="3"] { animation-delay: 0.55s; }
+.feature-card.animate[data-delay="4"] { animation-delay: 0.7s; }
+.feature-card.animate[data-delay="5"] { animation-delay: 0.85s; }
+.feature-card.animate[data-delay="6"] { animation-delay: 1.0s; }
+
+/* Bounce animation keyframes */
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+    80% {
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .feature-card.animate {
+        animation: fadeInSimple 0.5s ease forwards;
+    }
+    
+    @keyframes fadeInSimple {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-tertiary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+    color: var(--color-accent);
+    transition: all var(--transition-medium);
+}
+
+.feature-icon .material-icons {
+    font-size: 40px;
+    line-height: 1;
+}
+
+.feature-card:hover .feature-icon {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    transform: scale(1.1);
+}
+
+.feature-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.3;
+}
+
+.feature-card p {
+    color: var(--color-text-light);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Featured free plan card - full width with inverted colors */
+.feature-card[data-delay="6"] {
+    grid-column: 1 / -1; /* Span full width of grid */
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    max-width: 600px; /* Prevent it from being too wide on large screens */
+    margin: 0 auto; /* Center it within the full width */
+}
+
+.feature-card[data-delay="6"] h3 {
+    color: var(--color-white);
+}
+
+.feature-card[data-delay="6"] p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.feature-card[data-delay="6"] .feature-icon {
+    background-color: var(--color-white);
+    color: var(--color-accent);
+}
+
+.feature-card[data-delay="6"]:hover .feature-icon {
+    background-color: var(--color-tertiary);
+    color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.feature-card[data-delay="6"]:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
 
 /* 
  * =============================================================================
@@ -1608,6 +1787,18 @@ a.download-button::after {
     .link-group {
         min-width: 150px;
     }
+    
+    /* Features section tablet adjustments */
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+    
+    /* Featured free plan card stays full width on tablet */
+    .feature-card[data-delay="6"] {
+        grid-column: 1 / -1;
+        max-width: 500px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1918,5 +2109,43 @@ a.download-button::after {
     
     .desktop-only {
         display: none;
+    }
+    
+    /* Features section mobile adjustments */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .feature-card {
+        padding: var(--spacing-lg);
+        text-align: center;
+    }
+    
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .feature-icon .material-icons {
+        font-size: 36px;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .feature-card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    /* Featured free plan card adjustments for mobile */
+    .feature-card[data-delay="6"] {
+        grid-column: 1 / -1;
+        max-width: none; /* Allow full width on mobile */
+        margin: 0; /* Remove auto margin on mobile */
     }
 }

@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <script src="https://js.stripe.com/v3/"></script>
@@ -35,7 +36,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h2>Perfect Your Writing in a Single Tap</h2>
+                <h2><span id="typing-text">Perfect Your Writing in a Single Tap</span><span class="typing-cursor">|</span></h2>
                 <p>TextFixer uses advanced AI to instantly correct grammar, improve clarity, and fix typos in any text. Available as an iOS Shortcut that works in any app.</p>
                 <div class="hero-buttons">
                     <a href="#pricing" class="btn btn-primary" id="get-started-button">Get Started</a>
@@ -53,51 +54,6 @@
         </div>
     </section>
 
-<section class="benefits">
-    <div class="container">
-        <div class="section-header">
-            <h2>Key Benefits</h2>
-            <p>Why users love TextFixer</p>
-        </div>
-        
-        <div class="benefits-slideshow">
-            <div class="slideshow-container">
-                <!-- Slides -->
-                <div class="benefit-slide fade">
-                    <h3>Perfect Grammar</h3>
-                    <p>Fix spelling errors, grammar mistakes, and punctuation issues instantly with our advanced AI technology.</p>
-                </div>
-                
-                <div class="benefit-slide fade">
-                    <h3>Works Everywhere</h3>
-                    <p>Use TextFixer in any app that allows text selection and sharing, making it the perfect companion for all your writing needs.</p>
-                </div>
-                
-                <div class="benefit-slide fade">
-                    <h3>Powered by AI</h3>
-                    <p>Utilizes the latest AI technology to provide intelligent suggestions and high-quality text corrections that understand context.</p>
-                </div>
-                
-                <div class="benefit-slide fade">
-                    <h3>Social Media Posts</h3>
-                    <p>Create polished, error-free social media content that makes the right impression on your audience every time.</p>
-                </div>
-                
-                <!-- Navigation dots -->
-                <div class="slideshow-dots">
-                    <span class="dot active" onclick="currentSlide(1)"></span>
-                    <span class="dot" onclick="currentSlide(2)"></span>
-                    <span class="dot" onclick="currentSlide(3)"></span>
-                    <span class="dot" onclick="currentSlide(4)"></span>
-                </div>
-                
-                <!-- Navigation arrows -->
-                <a class="prev" onclick="plusSlides(-1)">❮</a>
-                <a class="next" onclick="plusSlides(1)">❯</a>
-            </div>
-        </div>
-    </div>
-</section>
 
     <section class="how-it-works" id="how-it-works">
         <div class="container">
@@ -154,6 +110,72 @@
         </div>
     </section>
 
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose TextFixer</h2>
+                <p>Simple, powerful features that make perfect writing effortless</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-delay="0">
+                    <div class="feature-icon">
+                        <i class="material-icons">vpn_key</i>
+                    </div>
+                    <h3>One Access Code. Every Platform.</h3>
+                    <p>Use it on any browser, iOS, and Android (coming soon) — no sync, no nonsense.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="1">
+                    <div class="feature-icon">
+                        <i class="material-icons">language</i>
+                    </div>
+                    <h3>Speaks 90+ Languages.</h3>
+                    <p>Multilingual magic. Write in your voice, any language.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="2">
+                    <div class="feature-icon">
+                        <i class="material-icons">tune</i>
+                    </div>
+                    <h3>Keeps Your Voice, Just Polished.</h3>
+                    <p>No aggressive rewrites. Just clarity without losing your style.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="3">
+                    <div class="feature-icon">
+                        <i class="material-icons">devices</i>
+                    </div>
+                    <h3>Runs on Old Devices, Too.</h3>
+                    <p>No fancy hardware needed. Works even on grandpa's iPhone.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="4">
+                    <div class="feature-icon">
+                        <i class="material-icons">visibility_off</i>
+                    </div>
+                    <h3>Stays Out of Your Way.</h3>
+                    <p>No popups, no suggestions mid-sentence — just there when you need it.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="5">
+                    <div class="feature-icon">
+                        <i class="material-icons">flash_on</i>
+                    </div>
+                    <h3>Slim. Fast. Focused.</h3>
+                    <p>No AI bloat. One job, done right.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="6">
+                    <div class="feature-icon">
+                        <i class="material-icons">card_giftcard</i>
+                    </div>
+                    <h3>Free Plan That's Actually Usable.</h3>
+                    <p>Upgrade only if you need more. Start for £0.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="pricing" id="pricing">
     <div class="container">
