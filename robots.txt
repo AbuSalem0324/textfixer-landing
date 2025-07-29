@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Important Pages
+Allow: /index.html
+Allow: /downloads.html
+Allow: /blog.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+
+# Assets
+Allow: /assets/
+Allow: /js/
+Allow: /styles.css
+
+# Success pages (less important for crawling)
+Disallow: /success-demo.html
+Disallow: /free-success.html
+Disallow: /plan-change-success.html
+
+# Sitemap location
+Sitemap: https://textfixer.co.uk/sitemap.xml
