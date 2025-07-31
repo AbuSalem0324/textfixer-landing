@@ -240,14 +240,11 @@
                 </div>
             </div>
             
-            <!-- API Key Container -->
+            <!-- Email Notice -->
             <div class="api-key-container">
-                <h3>Your API Key</h3>
-                <p>You'll need this API key to set up TextFixer on your devices:</p>
-                <div class="api-key" id="api-key">Loading your API key...</div>
-                <div class="button-container">
-                    <button class="btn btn-primary" id="copy-key">Copy API Key</button>
-                </div>
+                <h3>Check Your Email</h3>
+                <p>Your TextFixer Access Code has been sent to your email address. You'll need this code to set up TextFixer on your devices.</p>
+                <p><strong>Important:</strong> If you don't see the email within a few minutes, please check your spam folder.</p>
             </div>
             
             <!-- Features Container -->
@@ -271,8 +268,9 @@
             <div class="instructions">
                 <h3>Next Steps</h3>
                 <ol id="instructions-list">
+                    <li>Check your email for your TextFixer Access Code.</li>
                     <li>Download the TextFixer iOS Shortcut using the button below.</li>
-                    <li>When prompted during setup, paste your API key from above.</li>
+                    <li>When prompted during setup, enter your Access Code from the email.</li>
                     <li>Once set up, select any text in any app, tap the share button, and choose TextFixer from the shortcuts menu.</li>
                     <li>Your text will be instantly corrected!</li>
                 </ol>
@@ -357,23 +355,6 @@
                 console.log('Direct access to plan change page');
             }
             
-            // Copy API key functionality
-            document.getElementById('copy-key').addEventListener('click', function() {
-                const apiKeyText = document.getElementById('api-key').textContent;
-                if (apiKeyText && apiKeyText !== 'Loading your API key...') {
-                    navigator.clipboard.writeText(apiKeyText).then(function() {
-                        const button = document.getElementById('copy-key');
-                        const originalText = button.textContent;
-                        button.textContent = 'Copied!';
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                        }, 2000);
-                    }).catch(function(err) {
-                        console.error('Error copying text: ', err);
-                        alert('Failed to copy API key. Please select and copy manually.');
-                    });
-                }
-            });
             
             // Download shortcut functionality
             document.getElementById('download-shortcut').addEventListener('click', function() {
@@ -409,8 +390,6 @@
             document.getElementById('success-title').textContent = getSuccessTitle(data.change_type, data.current_plan.name);
             document.getElementById('success-message').textContent = data.message;
             
-            // Display API key
-            document.getElementById('api-key').textContent = data.user.api_key;
             
             // Display plan comparison (if upgrade/downgrade)
             if (data.old_plan && data.change_type !== 'renewal') {
