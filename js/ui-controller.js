@@ -277,7 +277,16 @@ async handleFormSubmit(event) {
                 return;
             } catch (checkoutError) {
                 console.error('Checkout error:', checkoutError);
-                this.showError('Failed to create checkout session. Please try again.');
+                
+                // Show specific error message from the API service
+                let errorMessage = checkoutError.message;
+                
+                // Fallback to generic message if no specific error provided
+                if (!errorMessage || errorMessage === 'Failed to create checkout session') {
+                    errorMessage = 'Unable to process payment. Please try again or contact support.';
+                }
+                
+                this.showError(errorMessage);
                 this.setLoadingState(false, originalButtonText);
                 return;
             }

@@ -71,9 +71,32 @@ plan_id: planId
 })
 });
  if (!response.ok) {
-     const errorText = await response.text();
-     console.error('Checkout session error:', errorText);
-     throw new Error('Failed to create checkout session');
+     let errorMessage = 'Failed to create checkout session';
+     try {
+         const errorData = await response.json();
+         if (errorData.error) {
+             errorMessage = errorData.error;
+         }
+     } catch (jsonError) {
+         // If JSON parsing fails, try getting text
+         try {
+             const errorText = await response.text();
+             console.error('Checkout session error response:', errorText);
+             // Extract meaningful error if possible
+             if (errorText.includes('Invalid payment configuration')) {
+                 errorMessage = 'Payment configuration error. Please contact support.';
+             } else if (errorText.includes('temporarily unavailable')) {
+                 errorMessage = 'Payment service temporarily unavailable. Please try again in a few minutes.';
+             } else if (errorText.includes('configuration error')) {
+                 errorMessage = 'Payment service configuration error. Please contact support.';
+             }
+         } catch (textError) {
+             console.error('Could not parse error response:', textError);
+         }
+     }
+     
+     console.error('Checkout session error:', errorMessage);
+     throw new Error(errorMessage);
  }
  
  return await response.json();
