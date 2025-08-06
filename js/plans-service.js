@@ -41,9 +41,9 @@ export class PlansService {
                     price: 0,
                     features: [
                         '20 fixes / month',
-                        '500 chars / fix',
-                        'Access all platform',
-                        'Use on multiple devices',
+                        'Up to 500 characters per fix',
+                        'Access on all platforms',
+                        'Use across multiple devices',
                         'No credit card required'
                     ]
                 },
@@ -52,18 +52,20 @@ export class PlansService {
                     name: 'Basic Plan',
                     price: 2.99,
                     features: [
-                        '250 fix / month',
-                        'Upto 2000 characters per fix',
-                        'Cancel any time'
+                        '250 fixes / month',
+                        'Up to 2,000 characters per fix',
+                        'Access on all platforms',
+                        'Cancel anytime'
                     ]
                 },
                 {
                     id: 'pro',
                     name: 'Pro Plan',
-                    price: 4.99,
+                    price: 5.99,
                     features: [
                         'Unlimited text corrections',
-                        'No chracter limit per fix'
+                        'No character limit per fix',
+                        'Access on all platforms'
                     ]
                 }
             ];
