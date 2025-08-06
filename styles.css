@@ -766,55 +766,65 @@ section {
     
     /* Initial state - hidden until animated */
     opacity: 0;
-    transform: translateY(50px);
+    will-change: transform, opacity;
 }
 
-/* Animation trigger class */
-.feature-card.animate {
-    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+/* Animation trigger classes */
+.feature-card.animate.slide-left {
+    animation: slideInLeft 0.5s ease-out forwards;
 }
 
-/* Staggered animation delays - applied when .animate class is added */
-.feature-card.animate[data-delay="0"] { animation-delay: 0.1s; }
-.feature-card.animate[data-delay="1"] { animation-delay: 0.25s; }
-.feature-card.animate[data-delay="2"] { animation-delay: 0.4s; }
-.feature-card.animate[data-delay="3"] { animation-delay: 0.55s; }
-.feature-card.animate[data-delay="4"] { animation-delay: 0.7s; }
-.feature-card.animate[data-delay="5"] { animation-delay: 0.85s; }
-.feature-card.animate[data-delay="6"] { animation-delay: 1.0s; }
+.feature-card.animate.slide-right {
+    animation: slideInRight 0.5s ease-out forwards;
+}
 
-/* Bounce animation keyframes */
-@keyframes bounceIn {
+/* Staggered animation delays - reduced for faster, more fluid animation */
+.feature-card.animate[data-delay="0"] { animation-delay: 0.05s; }
+.feature-card.animate[data-delay="1"] { animation-delay: 0.1s; }
+.feature-card.animate[data-delay="2"] { animation-delay: 0.15s; }
+.feature-card.animate[data-delay="3"] { animation-delay: 0.2s; }
+.feature-card.animate[data-delay="4"] { animation-delay: 0.25s; }
+.feature-card.animate[data-delay="5"] { animation-delay: 0.3s; }
+.feature-card.animate[data-delay="6"] { animation-delay: 0.35s; }
+
+/* Slide-in animation keyframes */
+@keyframes slideInLeft {
     0% {
         opacity: 0;
-        transform: translateY(50px);
-    }
-    60% {
-        opacity: 1;
-        transform: translateY(-10px);
-    }
-    80% {
-        transform: translateY(5px);
+        transform: translate3d(-50px, 20px, 0);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideInRight {
+    0% {
+        opacity: 0;
+        transform: translate3d(50px, 20px, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 }
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-    .feature-card.animate {
-        animation: fadeInSimple 0.5s ease forwards;
+    .feature-card.animate.slide-left,
+    .feature-card.animate.slide-right {
+        animation: fadeInSimple 0.3s ease forwards;
     }
     
     @keyframes fadeInSimple {
         from {
             opacity: 0;
+            transform: translate3d(0, 0, 0);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translate3d(0, 0, 0);
         }
     }
 }

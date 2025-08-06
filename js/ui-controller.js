@@ -391,19 +391,26 @@ handleSuccessfulRegistration(data) {
         
         // Feature detection with fallback
         if ('IntersectionObserver' in window) {
-            // Modern approach: individual observer for each card
+            // Modern approach: individual observer for each card with improved settings
             const cardObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Trigger animation for this specific card
-                        entry.target.classList.add('animate');
+                        const card = entry.target;
+                        const delay = parseInt(card.getAttribute('data-delay')) || 0;
+                        
+                        // Determine slide direction: even indexes slide from left, odd from right
+                        const slideDirection = delay % 2 === 0 ? 'slide-left' : 'slide-right';
+                        
+                        // Add animation classes
+                        card.classList.add('animate', slideDirection);
+                        
                         // Stop observing this card once animated
-                        cardObserver.unobserve(entry.target);
+                        cardObserver.unobserve(card);
                     }
                 });
             }, {
-                threshold: 0.1, // Trigger when 10% of card is visible
-                rootMargin: '0px 0px -50px 0px' // Start animation before card is fully in view
+                threshold: 0.2, // Trigger when 20% of card is visible (increased for faster response)
+                rootMargin: '-100px 0px -100px 0px' // Start animation earlier for better responsiveness
             });
             
             // Observe each card individually
@@ -413,9 +420,10 @@ handleSuccessfulRegistration(data) {
         } else {
             // Fallback for older browsers: staggered delay-based animation
             featureCards.forEach((card, index) => {
+                const slideDirection = index % 2 === 0 ? 'slide-left' : 'slide-right';
                 setTimeout(() => {
-                    card.classList.add('animate');
-                }, 1000 + (index * 150)); // 150ms delay between each card
+                    card.classList.add('animate', slideDirection);
+                }, 500 + (index * 100)); // Reduced delay for faster fallback animation
             });
         }
     }
