@@ -27,9 +27,7 @@ export class DemoService {
         this.updateCharCounter();
         this.updateUsageStatus();
         
-        // Wait for Turnstile to load before rendering
-        await this.waitForTurnstile();
-        this.renderTurnstile();
+        // Turnstile temporarily disabled
         
         this.trackPageLoad();
     }
@@ -168,8 +166,8 @@ export class DemoService {
         try {
             this.showLoading();
             
-            // Get Turnstile token
-            const turnstileToken = await this.getTurnstileToken();
+            // Skip Turnstile validation (temporarily disabled)
+            const turnstileToken = null;
             
             // Make API request
             const response = await this.callDemoAPI(text, turnstileToken);
@@ -330,8 +328,7 @@ export class DemoService {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    text: text,
-                    turnstile_token: turnstileToken
+                    text: text
                 })
             });
             
