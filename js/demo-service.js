@@ -22,11 +22,15 @@ export class DemoService {
     /**
      * Initialize demo functionality
      */
-    init() {
+    async init() {
         this.bindEvents();
         this.updateCharCounter();
         this.updateUsageStatus();
+        
+        // Wait for Turnstile to load before rendering
+        await this.waitForTurnstile();
         this.renderTurnstile();
+        
         this.trackPageLoad();
     }
     
@@ -212,6 +216,30 @@ export class DemoService {
     }
     
     /**
+     * Wait for Turnstile script to load
+     */
+    async waitForTurnstile(maxAttempts = 50, delay = 100) {
+        console.log('Waiting for Turnstile script to load...');
+        
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            if (window.turnstile) {
+                console.log(`Turnstile loaded after ${attempt} attempts`);
+                return true;
+            }
+            
+            // Wait before next attempt
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            if (attempt % 10 === 0) {
+                console.log(`Still waiting for Turnstile... (attempt ${attempt}/${maxAttempts})`);
+            }
+        }
+        
+        console.error('Turnstile script failed to load after maximum attempts');
+        return false;
+    }
+    
+    /**
      * Render Turnstile widget using programmatic approach
      */
     renderTurnstile() {
@@ -233,24 +261,31 @@ export class DemoService {
         
         // Render new Turnstile widget
         if (window.turnstile) {
-            this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
-                sitekey: sitekey,
-                theme: 'light',
-                callback: (token) => {
-                    this.turnstileToken = token;
-                    console.log('Turnstile validation successful');
-                },
-                'error-callback': () => {
-                    this.turnstileToken = null;
-                    console.error('Turnstile validation failed');
-                },
-                'timeout-callback': () => {
-                    this.turnstileToken = null;
-                    console.error('Turnstile validation timeout');
-                }
-            });
+            try {
+                this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+                    sitekey: sitekey,
+                    theme: 'light',
+                    callback: (token) => {
+                        this.turnstileToken = token;
+                        console.log('Turnstile validation successful');
+                    },
+                    'error-callback': () => {
+                        this.turnstileToken = null;
+                        console.error('Turnstile validation failed');
+                    },
+                    'timeout-callback': () => {
+                        this.turnstileToken = null;
+                        console.error('Turnstile validation timeout');
+                    }
+                });
+                console.log('Turnstile widget rendered successfully with ID:', this.turnstileWidgetId);
+            } catch (error) {
+                console.error('Error rendering Turnstile widget:', error);
+            }
         } else {
-            console.error('Turnstile not loaded');
+            console.error('Turnstile still not available after waiting');
+            // Show user-friendly message
+            turnstileWidget.innerHTML = '<p style="color: #e74c3c; text-align: center;">Security verification unavailable. Please refresh the page.</p>';
         }
     }
 
