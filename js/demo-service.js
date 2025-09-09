@@ -221,10 +221,20 @@ export class DemoService {
         // Clear existing content
         turnstileWidget.innerHTML = '';
         
+        // Debug Config access
+        console.log('Config object:', Config);
+        console.log('Config.TURNSTILE:', Config.TURNSTILE);
+        console.log('Config.TURNSTILE.SITE_KEY:', Config.TURNSTILE.SITE_KEY);
+        console.log('Type of sitekey:', typeof Config.TURNSTILE.SITE_KEY);
+        
+        // Ensure sitekey is a string
+        const sitekey = String(Config.TURNSTILE?.SITE_KEY || '0x4AAAAAABej8D7iiHn1gRgP');
+        console.log('Processed sitekey:', sitekey, 'Type:', typeof sitekey);
+        
         // Render new Turnstile widget
         if (window.turnstile) {
             this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
-                sitekey: Config.TURNSTILE.SITE_KEY,
+                sitekey: sitekey,
                 theme: 'light',
                 callback: (token) => {
                     this.turnstileToken = token;
@@ -272,6 +282,12 @@ export class DemoService {
      * Call the demo API
      */
     async callDemoAPI(text, turnstileToken) {
+        console.log('Calling demo API with:', {
+            url: `${this.apiUrl}/api/demo/fix`,
+            textLength: text.length,
+            turnstileToken: turnstileToken ? 'present' : 'missing'
+        });
+        
         try {
             const response = await fetch(`${this.apiUrl}/api/demo/fix`, {
                 method: 'POST',
@@ -284,7 +300,15 @@ export class DemoService {
                 })
             });
             
+            console.log('API Response:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok,
+                headers: Object.fromEntries(response.headers.entries())
+            });
+            
             const data = await response.json();
+            console.log('API Response Data:', data);
             
             if (!response.ok) {
                 return {
@@ -301,10 +325,16 @@ export class DemoService {
             };
             
         } catch (error) {
+            console.error('API Call Error Details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+            
             return {
                 success: false,
                 error: 'Network Error',
-                message: 'Please check your internet connection'
+                message: `Connection failed: ${error.message}`
             };
         }
     }
@@ -575,16 +605,33 @@ export class DemoService {
      * Track page load
      */
     async trackPageLoad() {
+        console.log('Tracking page load to:', `${this.apiUrl}/api/demo/page-load`);
+        
         try {
-            await fetch(`${this.apiUrl}/api/demo/page-load`, {
+            const response = await fetch(`${this.apiUrl}/api/demo/page-load`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
+            
+            console.log('Page load tracking response:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Page load tracking success:', data);
+            } else {
+                console.warn('Page load tracking failed with status:', response.status);
+            }
         } catch (error) {
-            // Ignore page load tracking errors
-            console.debug('Page load tracking failed:', error);
+            console.warn('Page load tracking error:', {
+                name: error.name,
+                message: error.message
+            });
         }
     }
 }
