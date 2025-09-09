@@ -12,7 +12,8 @@ export class DemoService {
         this.minLength = 5;
         this.usageCount = this.loadUsageCount();
         this.lastResetDate = this.loadLastResetDate();
-        this.turnstileWidget = null;
+        this.turnstileWidgetId = null;
+        this.turnstileToken = null;
         
         // Check if usage should be reset (new day)
         this.checkAndResetUsage();
@@ -25,6 +26,7 @@ export class DemoService {
         this.bindEvents();
         this.updateCharCounter();
         this.updateUsageStatus();
+        this.renderTurnstile();
         this.trackPageLoad();
     }
     
@@ -210,28 +212,57 @@ export class DemoService {
     }
     
     /**
+     * Render Turnstile widget using programmatic approach
+     */
+    renderTurnstile() {
+        const turnstileWidget = document.getElementById('turnstile-widget');
+        if (!turnstileWidget) return;
+
+        // Clear existing content
+        turnstileWidget.innerHTML = '';
+        
+        // Render new Turnstile widget
+        if (window.turnstile) {
+            this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+                sitekey: Config.TURNSTILE.SITE_KEY,
+                theme: 'light',
+                callback: (token) => {
+                    this.turnstileToken = token;
+                    console.log('Turnstile validation successful');
+                },
+                'error-callback': () => {
+                    this.turnstileToken = null;
+                    console.error('Turnstile validation failed');
+                },
+                'timeout-callback': () => {
+                    this.turnstileToken = null;
+                    console.error('Turnstile validation timeout');
+                }
+            });
+        } else {
+            console.error('Turnstile not loaded');
+        }
+    }
+
+    /**
      * Get Turnstile token
      */
     async getTurnstileToken() {
         return new Promise((resolve, reject) => {
-            if (window.turnstile) {
-                const token = window.turnstile.getResponse();
+            if (this.turnstileToken) {
+                resolve(this.turnstileToken);
+            } else if (window.turnstile && this.turnstileWidgetId) {
+                // Try to get token directly from widget
+                const token = window.turnstile.getResponse(this.turnstileWidgetId);
                 if (token) {
+                    this.turnstileToken = token;
                     resolve(token);
                 } else {
-                    // Reset turnstile and try again
-                    window.turnstile.reset();
-                    setTimeout(() => {
-                        const newToken = window.turnstile.getResponse();
-                        if (newToken) {
-                            resolve(newToken);
-                        } else {
-                            reject(new Error('Please complete the anti-bot verification'));
-                        }
-                    }, 1000);
+                    reject(new Error('Please complete the anti-bot verification'));
                 }
             } else {
                 // For development or when Turnstile is not available
+                console.warn('Turnstile not available, using dev token');
                 resolve('dev-token');
             }
         });
@@ -392,9 +423,10 @@ export class DemoService {
     handleRetry() {
         this.hideError();
         
-        // Reset Turnstile
-        if (window.turnstile) {
-            window.turnstile.reset();
+        // Reset Turnstile properly with widget ID
+        if (window.turnstile && this.turnstileWidgetId) {
+            window.turnstile.reset(this.turnstileWidgetId);
+            this.turnstileToken = null;
         }
     }
     
