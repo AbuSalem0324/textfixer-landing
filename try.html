@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://textfixer.co.uk/try.html" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Try TextFixer for free! Fix grammar, clarity, and typos instantly with our AI-powered text correction tool. No account required - 2 free uses per day.">
+    <meta name="keywords" content="text fixer, grammar checker, AI writing tool, text correction, try free, demo, grammar fix">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://textfixer.co.uk/try.html">
+    <meta property="og:title" content="Try TextFixer Free - AI Text Correction Demo">
+    <meta property="og:description" content="Experience TextFixer's AI-powered text correction. Fix grammar, clarity, and typos instantly. No account required - try 2 times per day for free!">
+    <meta property="og:image" content="https://textfixer.co.uk/assets/hero_img.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://textfixer.co.uk/try.html">
+    <meta name="twitter:title" content="Try TextFixer Free - AI Text Correction Demo">
+    <meta name="twitter:description" content="Experience TextFixer's AI-powered text correction. Fix grammar, clarity, and typos instantly. No account needed!">
+    <meta name="twitter:image" content="https://textfixer.co.uk/assets/hero_img.png">
+
+    <title>Try TextFixer Free - AI Text Correction Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" as="style">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">
+                <h1>TextFixer</h1>
+                <p class="tagline">AI-Powered Text Correction</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="blog.html">Updates</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="try.html" class="active">Try Demo</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h2>Try TextFixer for Free</h2>
+            <p>Experience AI-powered text correction instantly. No account required - 2 free uses per day!</p>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <div class="container">
+            <div class="demo-grid">
+                <!-- Input Section -->
+                <div class="demo-card input-card">
+                    <div class="demo-card-header">
+                        <h3><i class="material-icons">edit</i>Your Text</h3>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/<span id="char-limit">2000</span>
+                        </div>
+                    </div>
+                    <div class="demo-card-content">
+                        <textarea 
+                            id="input-text" 
+                            placeholder="Place your text here."
+                            maxlength="2000"
+                        >I has been working on this project for three month now and its going really good despite the fact that there is some challenges along the way. The team is very supportiv and we makes great progress everyday.</textarea>
+                        <div class="input-status">
+                            <div id="validation-message" class="validation-message"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="demo-card results-card" id="results-card" style="display: none;">
+                    <div class="demo-card-header">
+                        <h3><i class="material-icons">auto_fix_high</i>Fixed Text</h3>
+                        <div class="results-info">
+                            <span id="results-char-count">0</span> characters
+                        </div>
+                    </div>
+                    <div class="demo-card-content">
+                        <textarea 
+                            id="output-text" 
+                            placeholder="Your improved text will appear here..."
+                        ></textarea>
+                        <div class="results-actions">
+                            <button id="copy-btn" class="btn btn-primary">
+                                <i class="material-icons">content_copy</i>
+                                Copy Text
+                            </button>
+                            <button id="refix-btn" class="btn btn-secondary">
+                                <i class="material-icons">refresh</i>
+                                Re-fix
+                            </button>
+                            <button id="clear-btn" class="btn btn-text">
+                                <i class="material-icons">clear</i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Section -->
+            <div class="demo-actions">
+                <div class="fix-section">
+                    <!-- Turnstile Widget -->
+                    <div id="turnstile-container" class="turnstile-container">
+                        <div class="cf-turnstile" id="turnstile-widget" data-sitekey="0x4AAAAAABej8D7iiHn1gRgP" data-theme="light"></div>
+                    </div>
+                    
+                    <button id="fix-btn" class="btn btn-primary large">
+                        <i class="material-icons">auto_fix_high</i>
+                        <span class="btn-text">Fix My Text</span>
+                    </button>
+                    
+                    <div class="demo-status">
+                        <div id="rate-limit-info" class="rate-limit-info">
+                            <i class="material-icons">info</i>
+                            <span>2 free fixes per day</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loading-state" class="loading-state" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Fixing your text...</p>
+                </div>
+                
+                <!-- Error State -->
+                <div id="error-state" class="error-state" style="display: none;">
+                    <i class="material-icons">error_outline</i>
+                    <h4 id="error-title">Something went wrong</h4>
+                    <p id="error-message">Please try again in a moment.</p>
+                    <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Highlights -->
+    <section class="demo-features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="material-icons">flash_on</i>
+                    <h4>Instant Results</h4>
+                    <p>Get your text fixed in seconds with advanced AI</p>
+                </div>
+                <div class="feature-item">
+                    <i class="material-icons">tune</i>
+                    <h4>Preserves Your Style</h4>
+                    <p>Fixes errors while keeping your unique voice</p>
+                </div>
+                <div class="feature-item">
+                    <i class="material-icons">security</i>
+                    <h4>Private & Secure</h4>
+                    <p>Your text is processed securely and not stored</p>
+                </div>
+                <div class="feature-item">
+                    <i class="material-icons">language</i>
+                    <h4>90+ Languages</h4>
+                    <p>Works with texts in many languages</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Need More Than 2 Fixes Per Day?</h2>
+                <p>Get unlimited text correction with our affordable plans starting at just £2.99/month.</p>
+                <a href="index.html#pricing" class="btn btn-primary large">View Plans</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h2>TextFixer</h2>
+                    <p>AI-powered text correction in a tap.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="try.html">Try Demo</a></li>
+                            <li><a href="index.html#pricing">Pricing</a></li>
+                            <li><a href="downloads.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="blog.html">Updates</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TextFixer. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
