@@ -141,13 +141,13 @@ export class DemoService {
             return;
         }
         
-        // Check rate limit
-        if (this.usageCount >= 100) {
-            validationMessage.textContent = 'Daily limit reached (100 fixes per day)';
-            validationMessage.classList.add('error');
-            fixBtn.disabled = true;
-            return;
-        }
+        // Check rate limit - DISABLED FOR TESTING
+        // if (this.usageCount >= 100) {
+        //     validationMessage.textContent = 'Daily limit reached (100 fixes per day)';
+        //     validationMessage.classList.add('error');
+        //     fixBtn.disabled = true;
+        //     return;
+        // }
         
         // Check Turnstile verification (if widget is loaded)
         if (this.turnstileWidgetId && !this.turnstileToken) {
@@ -225,10 +225,11 @@ export class DemoService {
             return false;
         }
         
-        if (this.usageCount >= 100) {
-            this.showError('Daily Limit Reached', 'You can fix 100 texts per day. Try again tomorrow!');
-            return false;
-        }
+        // Rate limiting disabled for testing
+        // if (this.usageCount >= 100) {
+        //     this.showError('Daily Limit Reached', 'You can fix 100 texts per day. Try again tomorrow!');
+        //     return false;
+        // }
         
         return true;
     }
@@ -606,38 +607,43 @@ export class DemoService {
     }
     
     /**
-     * Update usage status display
+     * Update usage status display - DISABLED FOR TESTING
      */
     updateUsageStatus() {
         const rateLimitInfo = document.getElementById('rate-limit-info');
         
         if (!rateLimitInfo) return;
         
-        const remaining = Math.max(0, 100 - this.usageCount);
-        const icon = rateLimitInfo.querySelector('i');
-        const span = rateLimitInfo.querySelector('span');
+        // Hide rate limit info during testing
+        rateLimitInfo.style.display = 'none';
         
-        if (remaining === 0) {
-            rateLimitInfo.className = 'rate-limit-info error';
-            icon.textContent = 'block';
-            span.textContent = 'Daily limit reached - try again tomorrow';
-        } else if (remaining === 1) {
-            rateLimitInfo.className = 'rate-limit-info warning';
-            icon.textContent = 'warning';
-            span.textContent = `${remaining} fix remaining today`;
-        } else {
-            rateLimitInfo.className = 'rate-limit-info';
-            icon.textContent = 'info';
-            span.textContent = `${remaining} free fixes remaining today`;
-        }
+        // Original code commented out for testing
+        // const remaining = Math.max(0, 100 - this.usageCount);
+        // const icon = rateLimitInfo.querySelector('i');
+        // const span = rateLimitInfo.querySelector('span');
+        // 
+        // if (remaining === 0) {
+        //     rateLimitInfo.className = 'rate-limit-info error';
+        //     icon.textContent = 'block';
+        //     span.textContent = 'Daily limit reached - try again tomorrow';
+        // } else if (remaining === 1) {
+        //     rateLimitInfo.className = 'rate-limit-info warning';
+        //     icon.textContent = 'warning';
+        //     span.textContent = `${remaining} fix remaining today`;
+        // } else {
+        //     rateLimitInfo.className = 'rate-limit-info';
+        //     icon.textContent = 'info';
+        //     span.textContent = `${remaining} free fixes remaining today`;
+        // }
     }
     
     /**
-     * Increment usage count
+     * Increment usage count - DISABLED FOR TESTING
      */
     incrementUsage() {
-        this.usageCount++;
-        this.saveUsageCount();
+        // Usage tracking disabled for testing
+        // this.usageCount++;
+        // this.saveUsageCount();
     }
     
     /**
