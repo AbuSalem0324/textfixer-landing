@@ -142,8 +142,8 @@ export class DemoService {
         }
         
         // Check rate limit
-        if (this.usageCount >= 2) {
-            validationMessage.textContent = 'Daily limit reached (2 fixes per day)';
+        if (this.usageCount >= 100) {
+            validationMessage.textContent = 'Daily limit reached (100 fixes per day)';
             validationMessage.classList.add('error');
             fixBtn.disabled = true;
             return;
@@ -225,8 +225,8 @@ export class DemoService {
             return false;
         }
         
-        if (this.usageCount >= 2) {
-            this.showError('Daily Limit Reached', 'You can fix 2 texts per day. Try again tomorrow!');
+        if (this.usageCount >= 100) {
+            this.showError('Daily Limit Reached', 'You can fix 100 texts per day. Try again tomorrow!');
             return false;
         }
         
@@ -613,7 +613,7 @@ export class DemoService {
         
         if (!rateLimitInfo) return;
         
-        const remaining = Math.max(0, 2 - this.usageCount);
+        const remaining = Math.max(0, 100 - this.usageCount);
         const icon = rateLimitInfo.querySelector('i');
         const span = rateLimitInfo.querySelector('span');
         
