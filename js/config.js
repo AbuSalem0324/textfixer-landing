@@ -4,15 +4,6 @@
  */
 
 export const Config = {
-
-
-    /**
-     * Turnstile configuration
-     */
-    TURNSTILE: {
-        SITE_KEY: '0x4AAAAAABej8D7iiHn1gRgP'
-    },
-
     /**
      * API URL - Make sure this exactly matches your deployed backend
      */

@@ -12,8 +12,6 @@ export class DemoService {
         this.minLength = 5;
         this.usageCount = this.loadUsageCount();
         this.lastResetDate = this.loadLastResetDate();
-        this.turnstileWidgetId = null;
-        this.turnstileToken = null;
         
         // Check if usage should be reset (new day)
         this.checkAndResetUsage();
@@ -26,8 +24,6 @@ export class DemoService {
         this.bindEvents();
         this.updateCharCounter();
         this.updateUsageStatus();
-        
-        // Turnstile temporarily disabled
         
         this.trackPageLoad();
     }
@@ -166,11 +162,9 @@ export class DemoService {
         try {
             this.showLoading();
             
-            // Skip Turnstile validation (temporarily disabled)
-            const turnstileToken = null;
             
             // Make API request
-            const response = await this.callDemoAPI(text, turnstileToken);
+            const response = await this.callDemoAPI(text);
             
             if (response.success) {
                 this.displayResults(response.data);
@@ -182,7 +176,17 @@ export class DemoService {
             
         } catch (error) {
             console.error('Demo API error:', error);
-            this.showError('Connection Error', 'Please check your internet connection and try again.');
+            
+            // Provide more specific error messages based on error type
+            if (error.message && error.message.includes('Failed to fetch')) {
+                this.showError('Connection Error', 'Unable to connect to the TextFixer service. Please check your internet connection or try again later.');
+            } else if (error.message && error.message.includes('NetworkError')) {
+                this.showError('Network Error', 'There appears to be a network connectivity issue. Please try again in a moment.');
+            } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                this.showError('API Unavailable', 'The TextFixer demo service is currently unavailable. Please try again later.');
+            } else {
+                this.showError('Service Error', 'An unexpected error occurred. Please try again in a moment.');
+            }
         } finally {
             this.hideLoading();
         }
@@ -214,111 +218,12 @@ export class DemoService {
     }
     
     /**
-     * Wait for Turnstile script to load
-     */
-    async waitForTurnstile(maxAttempts = 50, delay = 100) {
-        console.log('Waiting for Turnstile script to load...');
-        
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-            if (window.turnstile) {
-                console.log(`Turnstile loaded after ${attempt} attempts`);
-                return true;
-            }
-            
-            // Wait before next attempt
-            await new Promise(resolve => setTimeout(resolve, delay));
-            
-            if (attempt % 10 === 0) {
-                console.log(`Still waiting for Turnstile... (attempt ${attempt}/${maxAttempts})`);
-            }
-        }
-        
-        console.error('Turnstile script failed to load after maximum attempts');
-        return false;
-    }
-    
-    /**
-     * Render Turnstile widget using programmatic approach
-     */
-    renderTurnstile() {
-        const turnstileWidget = document.getElementById('turnstile-widget');
-        if (!turnstileWidget) return;
-
-        // Clear existing content
-        turnstileWidget.innerHTML = '';
-        
-        // Debug Config access
-        console.log('Config object:', Config);
-        console.log('Config.TURNSTILE:', Config.TURNSTILE);
-        console.log('Config.TURNSTILE.SITE_KEY:', Config.TURNSTILE.SITE_KEY);
-        console.log('Type of sitekey:', typeof Config.TURNSTILE.SITE_KEY);
-        
-        // Ensure sitekey is a string
-        const sitekey = String(Config.TURNSTILE?.SITE_KEY || '0x4AAAAAABej8D7iiHn1gRgP');
-        console.log('Processed sitekey:', sitekey, 'Type:', typeof sitekey);
-        
-        // Render new Turnstile widget
-        if (window.turnstile) {
-            try {
-                this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
-                    sitekey: sitekey,
-                    theme: 'light',
-                    callback: (token) => {
-                        this.turnstileToken = token;
-                        console.log('Turnstile validation successful');
-                    },
-                    'error-callback': () => {
-                        this.turnstileToken = null;
-                        console.error('Turnstile validation failed');
-                    },
-                    'timeout-callback': () => {
-                        this.turnstileToken = null;
-                        console.error('Turnstile validation timeout');
-                    }
-                });
-                console.log('Turnstile widget rendered successfully with ID:', this.turnstileWidgetId);
-            } catch (error) {
-                console.error('Error rendering Turnstile widget:', error);
-            }
-        } else {
-            console.error('Turnstile still not available after waiting');
-            // Show user-friendly message
-            turnstileWidget.innerHTML = '<p style="color: #e74c3c; text-align: center;">Security verification unavailable. Please refresh the page.</p>';
-        }
-    }
-
-    /**
-     * Get Turnstile token
-     */
-    async getTurnstileToken() {
-        return new Promise((resolve, reject) => {
-            if (this.turnstileToken) {
-                resolve(this.turnstileToken);
-            } else if (window.turnstile && this.turnstileWidgetId) {
-                // Try to get token directly from widget
-                const token = window.turnstile.getResponse(this.turnstileWidgetId);
-                if (token) {
-                    this.turnstileToken = token;
-                    resolve(token);
-                } else {
-                    reject(new Error('Please complete the anti-bot verification'));
-                }
-            } else {
-                // For development or when Turnstile is not available
-                console.warn('Turnstile not available, using dev token');
-                resolve('dev-token');
-            }
-        });
-    }
-    
-    /**
      * Call the demo API
      */
-    async callDemoAPI(text, turnstileToken) {
+    async callDemoAPI(text) {
         console.log('Calling demo API with:', {
             url: `${this.apiUrl}/api/demo/fix`,
-            textLength: text.length,
-            turnstileToken: turnstileToken ? 'present' : 'missing'
+            textLength: text.length
         });
         
         try {
@@ -343,11 +248,27 @@ export class DemoService {
             console.log('API Response Data:', data);
             
             if (!response.ok) {
+                // Handle specific HTTP status codes
+                let errorMessage = data.error || 'API Error';
+                let errorDetail = data.message || 'Please try again later';
+                
+                if (response.status === 404) {
+                    errorMessage = 'Service Unavailable';
+                    errorDetail = 'The TextFixer demo service endpoint is not available. This may be a temporary deployment issue.';
+                } else if (response.status === 500) {
+                    errorMessage = 'Server Error';
+                    errorDetail = 'The TextFixer service is experiencing issues. Please try again later.';
+                } else if (response.status === 429) {
+                    errorMessage = 'Rate Limited';
+                    errorDetail = 'You have exceeded the daily limit for demo usage. Please try again tomorrow.';
+                }
+                
                 return {
                     success: false,
-                    error: data.error || 'API Error',
-                    message: data.message || 'Please try again later',
-                    data: data
+                    error: errorMessage,
+                    message: errorDetail,
+                    data: data,
+                    statusCode: response.status
                 };
             }
             
@@ -360,13 +281,29 @@ export class DemoService {
             console.error('API Call Error Details:', {
                 name: error.name,
                 message: error.message,
-                stack: error.stack
+                stack: error.stack,
+                apiUrl: `${this.apiUrl}/api/demo/fix`
             });
+            
+            // Provide more specific error messages
+            let errorMessage = 'Connection failed';
+            let errorDetail = error.message;
+            
+            if (error.message && error.message.includes('Failed to fetch')) {
+                errorMessage = 'Unable to reach the API server';
+                errorDetail = 'The TextFixer service may be temporarily unavailable. Please try again later.';
+            } else if (error.name === 'TypeError') {
+                errorMessage = 'Network connectivity issue';
+                errorDetail = 'Please check your internet connection and try again.';
+            } else if (error.message && error.message.includes('CORS')) {
+                errorMessage = 'API access issue';
+                errorDetail = 'There is a technical issue with the service. Please try again later.';
+            }
             
             return {
                 success: false,
-                error: 'Network Error',
-                message: `Connection failed: ${error.message}`
+                error: errorMessage,
+                message: errorDetail
             };
         }
     }
@@ -485,11 +422,6 @@ export class DemoService {
     handleRetry() {
         this.hideError();
         
-        // Reset Turnstile properly with widget ID
-        if (window.turnstile && this.turnstileWidgetId) {
-            window.turnstile.reset(this.turnstileWidgetId);
-            this.turnstileToken = null;
-        }
     }
     
     /**
