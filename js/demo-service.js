@@ -348,13 +348,13 @@ export class DemoService {
      */
     async callDemoAPI(text, turnstileToken) {
         console.log('Calling demo API with:', {
-            url: `${this.apiUrl}/demo/fix`,
+            url: `${this.apiUrl}/api/demo/fix`,
             textLength: text.length,
             turnstileToken: turnstileToken ? 'present' : 'missing'
         });
         
         try {
-            const response = await fetch(`${this.apiUrl}/demo/fix`, {
+            const response = await fetch(`${this.apiUrl}/api/demo/fix`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -410,7 +410,7 @@ export class DemoService {
                 name: error.name,
                 message: error.message,
                 stack: error.stack,
-                apiUrl: `${this.apiUrl}/demo/fix`
+                apiUrl: `${this.apiUrl}/api/demo/fix`
             });
             
             // Provide more specific error messages
@@ -702,10 +702,10 @@ export class DemoService {
      * Track page load
      */
     async trackPageLoad() {
-        console.log('Tracking page load to:', `${this.apiUrl}/demo/page-load`);
+        console.log('Tracking page load to:', `${this.apiUrl}/api/demo/page-load`);
         
         try {
-            const response = await fetch(`${this.apiUrl}/demo/page-load`, {
+            const response = await fetch(`${this.apiUrl}/api/demo/page-load`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
