@@ -33,6 +33,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Turnstile script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -117,6 +120,9 @@
             <!-- Action Section -->
             <div class="demo-actions">
                 <div class="fix-section">
+                    <!-- Turnstile Widget -->
+                    <div id="turnstile-widget" class="turnstile-widget"></div>
+                    
                     <button id="fix-btn" class="btn btn-primary large">
                         <i class="material-icons">auto_fix_high</i>
                         <span class="btn-text">Fix My Text</span>

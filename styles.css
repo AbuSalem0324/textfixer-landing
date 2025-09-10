@@ -2303,6 +2303,13 @@ a.download-button::after {
     justify-content: center;
 }
 
+.turnstile-widget {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    justify-content: center;
+    min-height: 65px; /* Minimum height for Turnstile widget */
+}
+
 #fix-btn {
     min-width: 200px;
     display: flex;

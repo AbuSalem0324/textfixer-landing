@@ -12,6 +12,8 @@ export class DemoService {
         this.minLength = 5;
         this.usageCount = this.loadUsageCount();
         this.lastResetDate = this.loadLastResetDate();
+        this.turnstileWidgetId = null;
+        this.turnstileToken = null;
         
         // Check if usage should be reset (new day)
         this.checkAndResetUsage();
@@ -24,6 +26,9 @@ export class DemoService {
         this.bindEvents();
         this.updateCharCounter();
         this.updateUsageStatus();
+        
+        // Initialize Turnstile
+        this.initializeTurnstile();
         
         this.trackPageLoad();
     }
@@ -144,6 +149,14 @@ export class DemoService {
             return;
         }
         
+        // Check Turnstile verification (if widget is loaded)
+        if (this.turnstileWidgetId && !this.turnstileToken) {
+            validationMessage.textContent = 'Please complete the anti-bot verification';
+            validationMessage.classList.add('error');
+            fixBtn.disabled = true;
+            return;
+        }
+        
         // Text is valid
         validationMessage.textContent = `Ready to fix (${length} characters)`;
         validationMessage.classList.add('success');
@@ -163,8 +176,11 @@ export class DemoService {
             this.showLoading();
             
             
+            // Get Turnstile token
+            const turnstileToken = await this.getTurnstileToken();
+            
             // Make API request
-            const response = await this.callDemoAPI(text);
+            const response = await this.callDemoAPI(text, turnstileToken);
             
             if (response.success) {
                 this.displayResults(response.data);
@@ -218,12 +234,123 @@ export class DemoService {
     }
     
     /**
+     * Initialize Turnstile widget
+     */
+    async initializeTurnstile() {
+        try {
+            // Wait for Turnstile script to load
+            if (await this.waitForTurnstile()) {
+                this.renderTurnstile();
+            } else {
+                console.warn('Turnstile failed to load, continuing without verification');
+            }
+        } catch (error) {
+            console.error('Turnstile initialization error:', error);
+        }
+    }
+    
+    /**
+     * Wait for Turnstile script to load
+     */
+    async waitForTurnstile(maxAttempts = 50, delay = 100) {
+        console.log('Waiting for Turnstile script to load...');
+        
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            if (window.turnstile) {
+                console.log(`Turnstile loaded after ${attempt} attempts`);
+                return true;
+            }
+            
+            // Wait before next attempt
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            if (attempt % 10 === 0) {
+                console.log(`Still waiting for Turnstile... (attempt ${attempt}/${maxAttempts})`);
+            }
+        }
+        
+        console.error('Turnstile script failed to load after maximum attempts');
+        return false;
+    }
+    
+    /**
+     * Render Turnstile widget
+     */
+    renderTurnstile() {
+        const turnstileWidget = document.getElementById('turnstile-widget');
+        if (!turnstileWidget) {
+            console.error('Turnstile widget container not found');
+            return;
+        }
+
+        // Clear existing content
+        turnstileWidget.innerHTML = '';
+        
+        // Get site key from config
+        const sitekey = Config.TURNSTILE?.SITE_KEY || '0x4AAAAAABej8D7iiHn1gRgP';
+        console.log('Rendering Turnstile with site key:', sitekey);
+        
+        // Render new Turnstile widget
+        if (window.turnstile) {
+            try {
+                this.turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+                    sitekey: sitekey,
+                    theme: 'light',
+                    callback: (token) => {
+                        this.turnstileToken = token;
+                        console.log('Turnstile validation successful');
+                        this.updateButtonState();
+                    },
+                    'error-callback': () => {
+                        this.turnstileToken = null;
+                        console.error('Turnstile validation failed');
+                        this.updateButtonState();
+                    },
+                    'timeout-callback': () => {
+                        this.turnstileToken = null;
+                        console.error('Turnstile validation timeout');
+                        this.updateButtonState();
+                    }
+                });
+                console.log('Turnstile widget rendered successfully with ID:', this.turnstileWidgetId);
+            } catch (error) {
+                console.error('Error rendering Turnstile widget:', error);
+            }
+        }
+    }
+    
+    /**
+     * Get Turnstile token
+     */
+    async getTurnstileToken() {
+        return new Promise((resolve, reject) => {
+            if (this.turnstileToken) {
+                resolve(this.turnstileToken);
+            } else {
+                reject(new Error('Please complete the anti-bot verification'));
+            }
+        });
+    }
+    
+    /**
+     * Update button state based on validation
+     */
+    updateButtonState() {
+        const fixBtn = document.getElementById('fix-btn');
+        if (fixBtn) {
+            // Re-run validation to update button state
+            this.validateInput();
+        }
+    }
+    
+    /**
      * Call the demo API
      */
-    async callDemoAPI(text) {
+    async callDemoAPI(text, turnstileToken) {
         console.log('Calling demo API with:', {
             url: `${this.apiUrl}/api/demo/fix`,
-            textLength: text.length
+            textLength: text.length,
+            turnstileToken: turnstileToken ? 'present' : 'missing'
         });
         
         try {
@@ -233,7 +360,8 @@ export class DemoService {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    text: text
+                    text: text,
+                    turnstile_token: turnstileToken
                 })
             });
             
@@ -422,6 +550,11 @@ export class DemoService {
     handleRetry() {
         this.hideError();
         
+        // Reset Turnstile if available
+        if (window.turnstile && this.turnstileWidgetId) {
+            window.turnstile.reset(this.turnstileWidgetId);
+            this.turnstileToken = null;
+        }
     }
     
     /**
