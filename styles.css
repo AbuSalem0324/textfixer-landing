@@ -2446,8 +2446,13 @@ a.download-button::after {
 /* Demo page responsive design */
 @media (max-width: 768px) {
     .demo-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         gap: var(--spacing-lg);
+    }
+    
+    /* Force single column layout even when results are shown */
+    .demo-grid.has-results {
+        grid-template-columns: 1fr !important;
     }
     
     .demo-card textarea {
