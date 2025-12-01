@@ -7,7 +7,7 @@ import { Config } from './config.js';
 
 export class DemoService {
     constructor() {
-        this.apiUrl = Config.API_URL;
+        this.apiUrl = Config.API_URL_V2 || Config.API_URL;
         this.maxLength = 2000;
         this.minLength = 5;
         this.usageCount = this.loadUsageCount();
