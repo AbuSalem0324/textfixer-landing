@@ -447,7 +447,7 @@ export class DemoService {
         const demoGrid = document.querySelector('.demo-grid');
         
         if (outputText && resultsCard && resultsCharCount) {
-            outputText.value = data.fixedText || data.fixed_text || '';
+            outputText.value = data.processed_text || data.fixedText || data.fixed_text || '';
             resultsCharCount.textContent = outputText.value.length;
             
             // Show results card and switch to two-column layout
