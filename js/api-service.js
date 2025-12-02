@@ -14,33 +14,48 @@ export class APIService {
     /**
      * Create a new user account
      * @param {string} email - User's email address
-     * @param {string} subscriptionType - Type of subscription ("free" or "pro")
-     * @returns {Promise<Object>} - User account details
+     * @param {string} subscriptionType - Type of subscription ("free" or "pro") [deprecated, kept for compatibility]
+     * @param {string} turnstileToken - Turnstile verification token [deprecated, kept for compatibility]
+     * @returns {Promise<Object>} - User account details with API key
      * @throws {Error} - If API call fails
      */
     async createUserAccount(email, subscriptionType = "free", turnstileToken = null) {
         try {
-            const response = await fetch(`${this.baseUrl}/register-free`, {
+            const response = await fetch(`${this.baseUrl}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
-                    email,
-                    subscription_type: subscriptionType,
-                    turnstile_token: turnstileToken
+                body: JSON.stringify({
+                    email
                 })
             });
-            
+
             if (!response.ok) {
                 const errorData = await response.json().catch(() => null);
-                const errorMessage = errorData && errorData.error 
-                    ? errorData.error 
+
+                // Handle specific error cases
+                if (response.status === 409) {
+                    throw new Error('An account with this email already exists');
+                }
+
+                const errorMessage = errorData && errorData.detail
+                    ? errorData.detail
                     : 'Failed to create user account';
                 throw new Error(errorMessage);
             }
-            
-            return await response.json();
+
+            const data = await response.json();
+
+            // Transform v2 API response to match expected format
+            return {
+                user_id: data.user.id,
+                email: data.user.email,
+                api_key: data.api_key,
+                subscription_status: data.user.subscription_status,
+                created_at: data.user.created_at,
+                is_new_user: true  // v2 API only creates new users
+            };
         } catch (error) {
             console.error('User creation error:', error);
             throw error;

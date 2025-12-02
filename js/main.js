@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Demo page initialized');
     } else {
         // Initialize main application services
-        const apiService = new APIService(Config.API_URL);
+        // Using v2 API for user registration
+        const apiService = new APIService(Config.API_URL_V2);
         const navigationService = new NavigationService();
         
         // Initialize UI controller with dependencies
@@ -33,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Start the main application
         uiController.init();
-        
-        console.log('Main application initialized');
+
+        console.log('Main application initialized with v2 API');
     }
 });
 
